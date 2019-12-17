@@ -3,17 +3,37 @@
   "version": "0.1.0",
   "private": true,
   "scripts": {
-    "serve": "vue-cli-service serve",
-    "build": "vue-cli-service build",
-    "lint": "vue-cli-service lint"
+    "serve": "vue-cli-service serve --mode dev",
+    "build": "vue-cli-service build  --mode dev",
+    "lint": "vue-cli-service lint --fix",
+    "build_app": "cross-env PAGE_ENV=app vue-cli-service build  --report --mode prod",
+    "build_beta": "vue-cli-service build  --report --mode beta",
+    "build_betadev": "vue-cli-service build  --report --mode betadev",
+    "build_pro": "vue-cli-service build  --report --mode prod",
+    "build_pro_temp": "vue-cli-service build --report --mode prod_temp",
+    "dev": "npm run serve",
+    "lint-fix:style": "npm run lint:style -- --fix",
+    "lint-fix:style1": "stylelint src/views/trade/trade-check.vue --fix",
+    "lint:style": "stylelint src/views/integral/*.{css,less,scss,vue}",
+    "start": "npm run dev",
+    "test": "npm run unit && npm run e2e",
+    "unit": "cross-env BABEL_ENV=test karma start test/unit/karma.conf.js --single-run"
   },
   "dependencies": {
     "core-js": "^3.4.3",
-    "vue": "^2.6.10"
+    "less": "^3.10.3",
+    "less-loader": "^5.0.0",
+    "mint-ui": "^2.2.13",
+    "normalize.css": "^8.0.1",
+    "vue": "^2.6.10",
+    "vue-router": "^3.1.3",
+    "vuex": "^3.1.2"
   },
   "devDependencies": {
     "@vue/cli-plugin-babel": "^4.1.0",
     "@vue/cli-plugin-eslint": "^4.1.0",
+    "@vue/cli-plugin-router": "^4.1.1",
+    "@vue/cli-plugin-vuex": "^4.1.1",
     "@vue/cli-service": "^4.1.0",
     "babel-eslint": "^10.0.3",
     "eslint": "^5.16.0",
