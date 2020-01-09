@@ -3,17 +3,18 @@ import App from './App.vue'
 import Mint from 'mint-ui';
 import Vuex from 'vuex'
 import router from './router'
-import store from './store'
+import store from './vuex/store'
 import VueResource from 'vue-resource'
 import common from './common'
 import AccountLogic from '@/logic/account'
+import components from '@/config-components'
 
 Vue.use(VueResource);
 Vue.use(Vuex)
 Vue.use(Mint);
 
 Vue.config.productionTip = false
-console.log(process)
+components(Vue)
 
 AccountLogic.initContext()
 Vue.http.options.emulateJSON = true;

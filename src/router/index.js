@@ -4,7 +4,7 @@ import Router from 'vue-router'
 Vue.use(Router)
 
 export default new Router({
-    mode: 'history', 
+    mode: 'history',
     routes: [
     // {
     //   path:'/',
@@ -29,6 +29,13 @@ export default new Router({
             name: 'ucenter',
             component: function (resolve) {
                 require(['../view/ucenter'], resolve)
+            }
+        },
+        {
+            path: '/login',
+            name: 'login',
+            component: function (resolve) {
+                require(['../view/login'], resolve)
             }
         }
     ]
