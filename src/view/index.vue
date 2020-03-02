@@ -1,12 +1,17 @@
 <template>
     <div>
         <div>home</div>
+        <tabbar />
     </div>
 </template>
 
 <script>
-import { post } from "@/http-handle/http2.js";
+import { post } from '@/http-handle/http2.js';
+import tabbar from '../components/tabbar'
 export default {
+    components: {
+        tabbar
+    },
     data(){
         return{
 

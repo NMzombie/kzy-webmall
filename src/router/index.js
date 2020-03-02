@@ -37,6 +37,13 @@ export default new Router({
             component: function (resolve) {
                 require(['../view/login'], resolve)
             }
+        },
+        {
+            path: '/goods/:pid',
+            name: 'goods',
+            component: function (resolve) {
+                require(['../view/goods'], resolve)
+            }
         }
     ]
 })

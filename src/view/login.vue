@@ -434,7 +434,7 @@ export default {
     left: 0rem;
     width: 100%;
     height: 0.49rem;
-    background: linear-gradient(90deg, rgba(21, 228, 196, 0.5) 0%, rgba(0, 198, 236, 0.5) 100%);
+    background: linear-gradient(90deg, #ff7272 0%, #ff9999 100%);
     font-size: 0.19rem;
     font-family: PingFangSC-Medium;
     font-weight: 500;
@@ -443,7 +443,7 @@ export default {
 }
 
 .bindButton.active {
-    background: linear-gradient(90deg, rgba(21, 228, 196, 1) 0%, rgba(0, 198, 236, 1) 100%);
+    background: linear-gradient(90deg, #fd2525 0%, #ff5700 100%);
     color: rgba(255, 255, 255, 1);
 }
 
@@ -496,7 +496,7 @@ input {
 }
 
 .getCodeC.active {
-    color: rgba(0, 187, 187, 1);
+    color: #ff5454
 }
 
 .wx-mask {

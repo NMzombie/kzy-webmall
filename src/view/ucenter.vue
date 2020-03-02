@@ -4,11 +4,16 @@
         <button @click="goLogin">
             login
         </button>
+        <tabbar />
     </div>
 </template>
 
 <script>
+import tabbar from '../components/tabbar'
 export default {
+    components: {
+        tabbar
+    },
     data(){
         return{
 

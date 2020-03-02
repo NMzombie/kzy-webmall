@@ -1,6 +1,7 @@
 import Vue from 'vue'
 import App from './App.vue'
 import Mint from 'mint-ui';
+import 'mint-ui/lib/style.css'
 import Vuex from 'vuex'
 import router from './router'
 import store from './vuex/store'
@@ -8,7 +9,10 @@ import VueResource from 'vue-resource'
 import common from './common'
 import AccountLogic from '@/logic/account'
 import components from '@/config-components'
+import VueAwesomeSwiper from 'vue-awesome-swiper'
+import 'swiper/dist/css/swiper.css'
 
+Vue.use(VueAwesomeSwiper)
 Vue.use(VueResource);
 Vue.use(Vuex)
 Vue.use(Mint);
