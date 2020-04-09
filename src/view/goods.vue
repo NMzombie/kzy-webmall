@@ -75,7 +75,13 @@
                 class="text"><span :class="curStock <= 5 ? 'choose-spec' : 'no-emergency-stock' "><i>已选</i><span class="sku-str">{{ skuNameStr }}, {{ num }}</span> </span>
             </span> -->
             <span
+                v-if="!skuChoosed.length"
                 class="text">请选择 规格数量</span>
+            <span
+                v-else
+                class="text">已选择： <span
+                    v-for="(item,i) in skuChoosed"
+                    :key="i">{{ item }} </span> </span>
             <span> <i class="right_arrow icon iconfont icon-arrow-right" /></span>
         </div>
 
@@ -91,21 +97,37 @@
         <img
             src="https://staticimg.ngmm365.com/cbc1db025feee1c2694bc2e7907d5cc6-w900_h1010.jpg?x-oss-process=image/resize,w_750/format,jpg/interlace,1/quality,Q_60/sharpen,90"
             style="width: 100%;">
-        <div v-html="content" />
 
+        <!-- 商品详情富文本 -->
+        <div
+            class="richText"
+            v-html="content" />
+        <div class="middle-one" />
+
+        <!-- 商品推荐 -->
+        <recommend :pid="pid" />
+        <div class="bottom">
+            <div class="short-line" />
+            END
+            <div class="short-line" />
+        </div>
         <div class="tabbar">
-            <div class="item">
+            <router-link
+                class="item"
+                to="/cart">
                 <img
                     src="../assets/home-new.png"
                     class="icon">
                 <p>首页</p>
-            </div>
-            <div class="item">
+            </router-link>
+            <router-link
+                class="item"
+                to="/cart">
                 <img
                     src="../assets/cart-new.png"
                     class="icon">
                 <p>购物车</p>
-            </div>
+            </router-link>
             <div class="item">
                 <img
                     src="../assets/kefu-new.png"
@@ -115,15 +137,13 @@
             <div class="cart">
                 加入购物车
             </div>
-            <div class="buynow">
+            <div
+                class="buynow"
+                @click="showSku = true">
                 立即购买
             </div>
         </div>
-        <div class="bottom">
-            <div class="short-line" />
-            END
-            <div class="short-line" />
-        </div>
+
         <noStockPopup
             :show-popup="popupShow"
             rule-type="fahuo"
@@ -145,11 +165,13 @@ import noStockPopup from '../components/noStockPopup'
 import noStock from '../components/noStock'
 import AccountLogic from '@/logic/account'
 import skuPopup from '../components/skuPopup'
+import recommend from '../components/recommend'
 export default {
     components:{
         noStockPopup,
         noStock,
-        skuPopup
+        skuPopup,
+        recommend
     },
     data(){
         return{
@@ -160,7 +182,9 @@ export default {
             maxPrice: '',
             content: '',
             showSku: false,
-            num: 1
+            num: 1,
+            skuChoosed: [],
+            scroll: ''
         }
     },
     computed: {
@@ -174,20 +198,31 @@ export default {
     created(){
         this.getGoodsInfo()
     },
+    mounted (){
+        window.addEventListener('scroll', this.backTopShow)
+    },
     methods: {
+        backTopShow() {
+            this.scroll = document.documentElement.scrollTop || document.body.scrollTop
+            if(this.scroll>390) {
+                console.log('11111111')
+            } else {
+                console.log('2222222')
+            }
+        },
         hidePopup () {
             this.popupShow = false
         },
         showPop () {
             this.popupShow = true
         },
-        closeSkuPop (){
+        closeSkuPop (val){
             this.showSku = false
+            this.skuChoosed = val
         },
         getGoodsInfo() {
             let data = {goodsId: this.pid,userId: this.userId}
             post('/goods/detail',data).then(res => {
-                console.log(res)
                 let data = res.data
                 this.p = data
                 let price = []
@@ -552,6 +587,7 @@ export default {
     font-family: "PingFangSC-Regular";
 }
 .bottom {
+  margin-bottom: 0.53rem;
   padding: 0.15rem 0;
   text-align: center;
   color: #ccc;
@@ -565,6 +601,16 @@ export default {
     width: 0.2rem;
     background-color: #dcd2d2;
     margin: 0.05rem
+}
+.richText {
+    font-family: "PingFangSC-Light";
+    font-size: 15px;
+    color: #666666;
+    line-height: 1.75;
+    padding: 0 10px;
+    word-wrap: break-word;
+    word-spacing: normal;
+    overflow-x: hidden;
 }
 .tabbar {
   position: fixed;
@@ -601,6 +647,7 @@ export default {
     font-size: .17rem;
     color: #fff;
     width: 29%;
+    font-family: PingFangSC-Regular,sans-serif;
   }
   .cart{
     text-align: center;
@@ -610,6 +657,7 @@ export default {
     font-size: .17rem;
     color: #fff;
     width: 29%;
+    font-family: PingFangSC-Regular,sans-serif;
   }
 }
 </style>

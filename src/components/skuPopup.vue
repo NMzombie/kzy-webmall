@@ -11,7 +11,7 @@
             :class="showSku?'show-popup':''">
             <div class="panel-header m10 flex">
                 <img
-                    src="https://staticimg.ngmm365.com/6d359a57a61fb27113c93c164c2b49f1-w1612_h1604.jpg?x-oss-process=image/resize,w_160/format,jpg/interlace,1/quality,Q_60/sharpen,90"
+                    :src="choosedImg || p.pictures ? p.pictures[0] : ''"
                     class="pro-img-sm">
                 <div class="sku-info">
                     <div class="sku-price">
@@ -93,20 +93,32 @@ export default {
                 p_spec_list = []
             }
             return p_spec_list
+        },
+        choosedImg() {
+            let choosedImg = ''
+            const skus = this.p.skus
+            if(skus){
+                skus.forEach((sku,index) => {
+                    if (sku.optionCode == this.skuChoosed.join(',')) choosedImg = sku.skuImg
+                })
+            }
+            return choosedImg
         }
+    },
+    created() {
+
     },
     methods: {
         hideSku() {
-            this.$emit('closeSkuPop')
+            this.$emit('closeSkuPop',this.skuChoosed)
         },
         skuChoose(sku,i) {
             this.$set(this.skuChoosed,i,sku)
             // this.skuChoosed[i] = sku
-            console.log(this.skuChoosed[i] == sku)
         },
         eventSkuNum (num) {
             this.skuNumC = num
-            this.$emit('eventSkuNum', num)
+            this.$emit('eventSkuNum', num[0])
         },
         onSubmit() {
             this.$emit('closeSkuPop')
@@ -137,7 +149,7 @@ export default {
     bottom: -100vh;
     transition: bottom .3s ease-out;
     width: 100%;
-    z-index: 101;
+    z-index: 600;
 }
 .show-popup{
     bottom: 0;

@@ -493,15 +493,15 @@ const map = {
 
 // let { VUE_APP_API_ENV, VUE_APP_APPID, VUE_APP_APPID_ZJ, VUE_APP_APPID_GJ, VUE_APP_APPID_XY, VUE_APP_APPID_CELL} = process.env;
 const VUE_APP_API_ENV = 'beta'
-
+console.log(process.env.VUE_APP_API_ENV,'VUE_APP_API_ENV')
 // 本地环境，或者以下环境之外的
-if (!/^(pro|beta|betadev|dev)$/.test(VUE_APP_API_ENV)) {
-    // VUE_APP_API_ENV='local'
-    // VUE_APP_API_ENV='dev'
-    VUE_APP_API_ENV = 'beta'
-    // VUE_APP_API_ENV='betadev'
-    // VUE_APP_API_ENV='pro'
-}
+// if (!/^(pro|beta|betadev|dev)$/.test(VUE_APP_API_ENV)) {
+//     VUE_APP_API_ENV='local'
+//     VUE_APP_API_ENV='dev'
+//     VUE_APP_API_ENV = 'beta'
+//     VUE_APP_API_ENV='betadev'
+//     VUE_APP_API_ENV='pro'
+// }
 
 // console.log(`VUE_APP_API_ENV : ${VUE_APP_API_ENV}, VUE_APP_APPID : ${VUE_APP_APPID}, VUE_APP_APPID_ZJ : ${VUE_APP_APPID_ZJ},  VUE_APP_APPID_GJ : ${VUE_APP_APPID_GJ},  VUE_APP_APPID_XY : ${VUE_APP_APPID_XY},  VUE_APP_APPID_CELL : ${VUE_APP_APPID_CELL}, VUE_APP_MAIN_HOSTNAME : ${main_hostname}` )
 
@@ -521,17 +521,17 @@ let wxconfig = {}
 //         authorizeCallbackUrl:`https://callback.${main_hostname}/account/wechatAuth/callback`,
 //     }
 // } else if (VUE_APP_API_ENV == 'beta') {
-    wxconfig = {
-        // (辅食小店的)微信授权的appid
-        appId:"wx8aae36b94fe14a70",
-        appId_zj:"wxf292488bb1d28004",
-        appId_gj:"wxf292488bb1d28004",//糕妈优选
-        appId_xy:"wx8aae36b94fe14a70",//年糕妈妈学院
-        appId_cell: 'wx8aae36b94fe14a70',
-        loginCallbackUrl:"http://callback.ngmm001.com/account/wechatAuth/callback",
-        authorizeCallbackUrl:"http://callback.ngmm001.com/account/wechatAuth/callback",
-        logoutUrl: "http://callback.ngmm001.com/account/wechatAuth/logout",
-    }
+wxconfig = {
+    // (辅食小店的)微信授权的appid
+    appId:"wx8aae36b94fe14a70",
+    appId_zj:"wxf292488bb1d28004",
+    appId_gj:"wxf292488bb1d28004",//糕妈优选
+    appId_xy:"wx8aae36b94fe14a70",//年糕妈妈学院
+    appId_cell: 'wx8aae36b94fe14a70',
+    loginCallbackUrl:"http://callback.ngmm001.com/account/wechatAuth/callback",
+    authorizeCallbackUrl:"http://callback.ngmm001.com/account/wechatAuth/callback",
+    logoutUrl: "http://callback.ngmm001.com/account/wechatAuth/logout",
+}
 // } else if (VUE_APP_API_ENV == 'test') {
 //     wxconfig = {
 //         //(糕妈优选)

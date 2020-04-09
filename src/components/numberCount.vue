@@ -59,12 +59,12 @@ export default {
     methods: {
         minus() {
             if (!this.is_min){
-                this.$emit('eventSkuNum', parseInt(this.value) - 1);
+                this.$emit('eventSkuNum', [parseInt(this.value) - 1, 0]);
             }
         },
         plus() {
             if (!this.is_max){
-                this.$emit('eventSkuNum', parseInt(this.value) + 1);
+                this.$emit('eventSkuNum', [parseInt(this.value) + 1, 1]);
             }
         }
     }

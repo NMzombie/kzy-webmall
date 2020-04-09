@@ -10,12 +10,15 @@ import common from './common'
 import AccountLogic from '@/logic/account'
 import components from '@/config-components'
 import VueAwesomeSwiper from 'vue-awesome-swiper'
+import Vant from 'vant';
+import 'vant/lib/index.css';
 import 'swiper/dist/css/swiper.css'
 
 Vue.use(VueAwesomeSwiper)
 Vue.use(VueResource);
 Vue.use(Vuex)
 Vue.use(Mint);
+Vue.use(Vant);
 
 Vue.config.productionTip = false
 components(Vue)
@@ -41,37 +44,37 @@ Vue.http.interceptors.push((request, next) => {
 
     // continue to next interceptor
     next((response) => {
-        // if (response && response.body) {
-        //     let obj = response.body;
+        if (response && response.body) {
+            let obj = response.body;
 
-        //     //需要登录或者access-token缺失，支付不匹配
-        //     if (obj.code == 11991019 || obj.code == 11991011 || obj.code == 11020013) {
+            //需要登录或者access-token缺失，支付不匹配
+            if (obj.code == 11991019 || obj.code == 11991011 || obj.code == 11020013) {
 
-        //         // // @todo
-        //         // Toast({
-        //         //   message: `错误码：${obj.code},错误信息：${obj.desc}`,
-        //         //   position: 'bottom',
-        //         //   duration: 5000
-        //         // });
-        //         // return
+                // // @todo
+                // Toast({
+                //   message: `错误码：${obj.code},错误信息：${obj.desc}`,
+                //   position: 'bottom',
+                //   duration: 5000
+                // });
+                // return
 
-        //         AccountLogic.cleanContext()
+                AccountLogic.cleanContext()
 
-        //         // 判断是否是强制需要登录的页面
-        //         if (!system.isApp() || system.isApp() && !isNotLogin()) {
-        //             //判断是否在知识付费详情页中
-        //             if (isKnowledgeDetail()) { //使用学院公众号登录
-        //                 AccountLogic.login(window.location.href, common.config.appId_xy);
-        //             // 新细胞页面
-        //             } else if (isCellCoursePage()) {
-        //                 AccountLogic.login(window.location.href, common.config.appId_cell)
-        //             } else {
-        //                 AccountLogic.login();
-        //             }
-        //         }
-        //     }
-        // }
-        // // 灰测用户标识
+                // 判断是否是强制需要登录的页面
+                // if (!system.isApp() || system.isApp() && !isNotLogin()) {
+                //     //判断是否在知识付费详情页中
+                //     if (isKnowledgeDetail()) { //使用学院公众号登录
+                //         AccountLogic.login(window.location.href, common.config.appId_xy);
+                //     // 新细胞页面
+                //     } else if (isCellCoursePage()) {
+                //         AccountLogic.login(window.location.href, common.config.appId_cell)
+                //     } else {
+                //         AccountLogic.login();
+                //     }
+                // }
+            }
+        }
+        // 灰测用户标识
         // const currentUserId = auth['x-user-id']
         // let cookie_abtestUser = AccountLogic.getAbtestUser()
         // if (cookie_abtestUser) {
