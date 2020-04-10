@@ -134,7 +134,9 @@
                     class="icon">
                 <p>客服</p>
             </div>
-            <div class="cart">
+            <div
+                class="cart"
+                @click="showSku = true">
                 加入购物车
             </div>
             <div

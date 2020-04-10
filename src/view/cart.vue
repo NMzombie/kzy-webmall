@@ -39,7 +39,7 @@
                             @eventSkuNum="eventSkuNum($event, item)" />
                         <i
                             class="btn-close icon iconfont icon-guanbi"
-                            @click="doDel(item)" />
+                            @click.stop="doDel(item)" />
                     </div>
                 </dd>
             </div>

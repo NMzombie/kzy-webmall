@@ -11,11 +11,11 @@
             :class="showSku?'show-popup':''">
             <div class="panel-header m10 flex">
                 <img
-                    :src="choosedImg || p.pictures ? p.pictures[0] : ''"
+                    :src="(p.pictures && !choosedImg) ? p.pictures[0] : choosedImg"
                     class="pro-img-sm">
                 <div class="sku-info">
                     <div class="sku-price">
-                        ￥111
+                        ￥{{ (getPrice()/100).toFixed(2) }}
                     </div>
                     <div class="sku-choose">
                         已选择：<span
@@ -53,17 +53,33 @@
                     :max="p.stock"
                     @eventSkuNum="eventSkuNum" />
             </div>
-            <div
+            <!-- <div
                 class="buy-button"
                 @click="onSubmit">
                 确定
+            </div> -->
+            <div class="two-button">
+                <button
+                    class="go-cart"
+                    @click="addCart">
+                    加入购物车
+                </button>
+                <button class="go-buy">
+                    立即购买
+                </button>
             </div>
         </div>
+    </div>
     </div>
 </template>
 
 <script>
+import {
+    mapActions
+} from 'vuex'
 import numberCount from './numberCount'
+import system from '@/tools/system'
+import { post } from '@/http-handle/http2.js'
 export default {
     components: {
         numberCount
@@ -72,7 +88,8 @@ export default {
     data() {
         return {
             skuChoosed:[],
-            skuNumC: ''
+            skuNumC: '',
+            choosedSku: ''
         }
     },
     computed: {
@@ -103,27 +120,147 @@ export default {
                 })
             }
             return choosedImg
+        },
+        skuId () {
+            let skuId = ''
+            this.p.skus.forEach(sku => {
+                if (sku.optionCode == this.choosedSku) skuId = sku.id
+            })
+            return skuId
+        },
+        channelCode () {
+            return system.channelCode()
+        },
+        isCheckAllSku () {
+            if (this.skuChoosed.length < this.skuList.length)
+            {
+                return false
+            }else {
+                return true
+            }
         }
     },
     created() {
 
     },
     methods: {
+        ...mapActions(['actionPopupUIMessageShow']),
         hideSku() {
+            clearTimeout(this.T)
             this.$emit('closeSkuPop',this.skuChoosed)
         },
         skuChoose(sku,i) {
             this.$set(this.skuChoosed,i,sku)
+            this.choosedSku = this.skuChoosed.join(',')
             // this.skuChoosed[i] = sku
         },
         eventSkuNum (num) {
-            this.skuNumC = num
+            this.skuNumC = num[0]
             this.$emit('eventSkuNum', num[0])
         },
-        onSubmit() {
+        onSubmit () {
             this.$emit('closeSkuPop')
-        }
+        },
+        // 检查库存是否足够
+        checkStockAvaible () {
+            if (this.p.stock < this.num )
+            {
+                return false
+            } else {
+                return true
+            }
+        },
+        addCart () {
+            let _this = this
+            if (!this.checkStockAvaible()) {
+                this.actionPopupUIMessageShow('库存不足')
+                return
+            }
+            if (!this.isCheckAllSku) {
+                this.actionPopupUIMessageShow('请继续选择商品规格')
+                return
+            }
+
+            let goodsId = this.p.id
+            let itemNum = parseInt(this.num)
+            let skuId = this.skuId
+            let goodsNameSnapshot = this.p.name
+            let itemPriceSnapshot = this.getPrice()
+            let appPriceSnapshot = this.getPrice()
+            let pictureUrlSnapshot = this.p.pictures[0]
+            let optionsSnapshot = this.skuChoosed.join('、')
+            let activityType = this.p.activityId ? 2 : 1 // 活动类型id, 1-无活动、2-限时折扣, 默认为1
+            let activityId = this.p.activityId && this.p.v != 2 ? this.p.activityId : 0
+            let source = (this.p.goodsMallVO && this.p.goodsMallVO.id) || 1 // 商品来源
+            let jumpUrl = window.location.pathname // 商品跳转链接
+            let cartItemType = 0 // 0:商品,1:奖品
+            let exchangePointSnapshot = 0
+            let channelCode = this.channelCode
+
+            let data = {
+                goodsId,
+                skuId,
+                goodsNameSnapshot,
+                optionsSnapshot,
+                itemPriceSnapshot,
+                appPriceSnapshot,
+                pictureUrlSnapshot,
+                itemNum,
+                activityType,
+                activityId,
+                source,
+                jumpUrl,
+                cartItemType,
+                exchangePointSnapshot,
+                channelCode
+            }
+            post('/cart/add', data).then(obj => {
+                if (obj.code == 10000) {
+                    _this.actionPopupUIMessageShow('加入购物车成功!')
+
+                    // _this.actionAjaxCartNumber()
+
+                    this.T = setTimeout(() => {
+                        _this.hideSku()
+                    }, 200)
+
+
+                    _this.save(obj.data)
+                } else {
+                    _this.actionPopupUIMessageShow(obj.desc)
+                }
+            })
+        },
+        getPrice (){
+            let price = ''
+            let existSku = this.p.existSku
+            if(existSku && this.skuId) {
+                this.p.skus.forEach(sku => {
+                    if (sku.id == this.skuId) price = sku.price
+                })
+            } else {
+                price = this.p.sellPrice
+            }
+            return price
+        },
+        save (ids) {
+            ids = Object.prototype.toString.call(ids) === '[object Array]' ? ids : [ids]
+            let cache = JSON.parse(localStorage.getItem('stash_cart')) || []
+            if (cache.length > 0) {
+                ids.forEach((id, i) => {
+                    if (!cache.includes(id)) {
+                        cache.push(id)
+                    }
+                })
+            } else {
+                ids.forEach((id, i) => {
+                    cache.push(id)
+                })
+            }
+            localStorage.setItem('stash_cart', JSON.stringify(cache))
+        },
     }
+
 }
 </script>
 <style lang="less" scoped>
@@ -249,5 +386,28 @@ export default {
   justify-content: center;
   align-items: center;
   font-size: 0.18rem
+}
+.two-button {
+  padding: 0.08rem 0.16rem;
+  display: flex;
+  button {
+    height: 0.4rem;
+    font-size: 0.14rem;
+    line-height: 0.34rem;
+    border: none;
+    border-radius: 0;
+    width: 100%;
+    color: white
+  }
+  .go-cart {
+    border-top-left-radius: 0.2rem;
+    border-bottom-left-radius: 0.2rem;
+    background: linear-gradient(to right, #ffd01e, #ff8917);
+  }
+  .go-buy {
+    background: linear-gradient(to right, #ff6034, #ee0a24);
+    border-top-right-radius: 0.2rem;
+    border-bottom-right-radius: 0.2rem;
+  }
 }
 </style>
