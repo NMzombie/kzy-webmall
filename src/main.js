@@ -10,6 +10,7 @@ import common from './common'
 import AccountLogic from '@/logic/account'
 import components from '@/config-components'
 import VueAwesomeSwiper from 'vue-awesome-swiper'
+import VueLazyload from 'vue-lazyload'
 import Vant from 'vant';
 import 'vant/lib/index.css';
 import 'swiper/dist/css/swiper.css'
@@ -19,6 +20,10 @@ Vue.use(VueResource);
 Vue.use(Vuex)
 Vue.use(Mint);
 Vue.use(Vant);
+Vue.use(VueLazyload, {
+    loading: require('./assets/images/lazyLoad.png'),//加载中图片，一定要有，不然会一直重复加载占位图
+    error: require('./assets/images/lazyLoad.png')
+});
 
 Vue.config.productionTip = false
 components(Vue)

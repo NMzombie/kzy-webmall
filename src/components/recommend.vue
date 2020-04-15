@@ -1,28 +1,52 @@
 <template>
     <section>
-        <div class="recommend">
+        <div
+            :class="[type == 'cart' ? 'mb' : '','recommend']">
             <div class="title">
-                激情推荐
+                {{ type == "detail" ? '激情推荐' : '为你推荐' }}
             </div>
-            <div
-                v-for="(item,index) in dataList"
-                :key="index"
-                class="box">
-                <van-image
-                    class="goods-img"
-                    :src="item.pictures[0]" />
-                <div class="goods-info">
-                    <p class="goods-title">
-                        {{ item.name }}
-                    </p>
-                    <p class="detail">
-                        {{ item.subName }}
-                    </p>
-                    <p class="r2">
-                        <span class="price">￥{{ item.sellPrice }}</span>
-                    </p>
+            <section v-if="type == 'detail'">
+                <div
+                    v-for="(item,index) in dataList"
+                    :key="index"
+                    class="box">
+                    <img
+                        v-lazy="item.pictures[0]"
+                        class="goods-img">
+                    <div class="goods-info">
+                        <p class="goods-title">
+                            {{ item.name }}
+                        </p>
+                        <p class="detail">
+                            {{ item.subName }}
+                        </p>
+                        <p class="r2">
+                            <span class="price">￥{{ item.sellPrice }}</span>
+                        </p>
+                    </div>
                 </div>
-            </div>
+            </section>
+            <section v-else-if="type == 'cart'">
+                <div
+                    v-for="(item,index) in dataList"
+                    :key="index"
+                    class="box">
+                    <img
+                        v-lazy="item.picture"
+                        class="goods-img">
+                    <div class="goods-info">
+                        <p class="goods-title">
+                            {{ item.mainTitle }}
+                        </p>
+                        <p class="detail">
+                            {{ item.subTitle }}
+                        </p>
+                        <p class="r2">
+                            <span class="price">￥{{ (item.sellPrice/100).toFixed(2) }}</span>
+                        </p>
+                    </div>
+                </div>
+            </section>
         </div>
     </section>
 </template>
@@ -30,11 +54,17 @@
 <script>
 import { mapActions } from 'vuex'
 import { post } from '@/http-handle/http2.js'
+import AccountLogic from '@/logic/account'
 export default {
-    props:['pid'],
+    props:['pid','type'],
     data() {
         return{
             dataList: []
+        }
+    },
+    computed: {
+        userId() {
+            return AccountLogic.getUserId()
         }
     },
     created() {
@@ -43,18 +73,29 @@ export default {
     methods: {
         ...mapActions(['actionPopupUIMessageShow']),
         initData () {
+            let userId = this.userId
             let _this = this
-            let postData = {
-                goodsId: this.pid,
-                size: 10
-            }
-            post('/goods/similarityGoodsRecommend',postData).then(obj => {
-                if (obj.code == 10000) {
-                    this.dataList = obj.data.data
-                } else {
-                    _this.actionPopupUIMessageShow(obj.desc || "网络请求失败")
+            if(this.type == "detail"){
+                let postData = {
+                    goodsId: this.pid,
+                    size: 10
                 }
-            })
+                post('/goods/similarityGoodsRecommend',postData).then(obj => {
+                    if (obj.code == 10000) {
+                        this.dataList = obj.data.data
+                    } else {
+                        _this.actionPopupUIMessageShow(obj.desc || "网络请求失败")
+                    }
+                })
+            } else if(this.type == "cart") {
+                post('/cart/recommend',{userId}).then(({data,desc,code}) => {
+                    if (code*1 != 10000){
+                        _this.actionPopupUIMessageShow(obj.desc || "网络请求失败")
+                    }else {
+                        this.dataList = data.goods
+                    }
+                })
+            }
         }
     }
 }
@@ -62,6 +103,9 @@ export default {
 </script>
 
 <style lang="less" scoped>
+.mb {
+  margin-bottom: 1.07rem;
+}
 .recommend{
     width: 100%;
     background-color: #fff;

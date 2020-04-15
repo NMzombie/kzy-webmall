@@ -140,6 +140,11 @@ export default {
             }
         }
     },
+    watch: {
+        skuList:function(val) {
+            if(val.length == 1) this.skuChoosed[0] = val[0].optionNames[0]
+        }
+    },
     created() {
 
     },

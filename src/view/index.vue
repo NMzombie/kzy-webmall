@@ -1,6 +1,8 @@
 <template>
     <div>
-        <div>home</div>
+        <router-link to="/goods/42622">
+            home
+        </router-link>
         <tabbar />
     </div>
 </template>

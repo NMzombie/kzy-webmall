@@ -3,19 +3,19 @@
         <div class="wrap">
             <div
                 :class="['item',{'disabled':is_min}]"
-                @click="minus">
+                @click.stop="minus">
                 -
             </div>
             <div
                 class="item inputItem"
-                @click="plus">
+                @click.stop="plus">
                 <input
                     v-model="value"
                     class="input">
             </div>
             <div
                 :class="['item',{'disabled':is_max},'add']"
-                @click="plus">
+                @click.stop="plus">
                 +
             </div>
         </div>

@@ -74,7 +74,6 @@ export default {
     },
     created() {
         this.pathName = this.$route.name
-        console.log(this.$route.name)
     },
     methods: {
         go(path){
@@ -106,6 +105,6 @@ export default {
   color: #868686
 }
 .active{
-  color: #cc0404
+  color: #de182e;
 }
 </style>

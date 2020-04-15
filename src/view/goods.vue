@@ -105,7 +105,9 @@
         <div class="middle-one" />
 
         <!-- 商品推荐 -->
-        <recommend :pid="pid" />
+        <recommend
+            :pid="pid"
+            type="detail" />
         <div class="bottom">
             <div class="short-line" />
             END

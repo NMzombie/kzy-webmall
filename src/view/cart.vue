@@ -1,5 +1,10 @@
 <template>
     <div class="main-container">
+        <div
+            v-if="loading"
+            class="loading_new_wrap">
+            <div :class="['liu']" />
+        </div>
         <div class="safe-info">
             <div
                 class="safe-info-fixed">
@@ -11,7 +16,24 @@
                 </ul>
             </div>
         </div>
-        <section class="store">
+        <div
+            v-if="!hasGoods && !loading"
+            class="blank">
+            <van-icon name="shopping-cart-o" />
+            <div>
+                <p>你的购物车还没有商品哦~</p>
+                <p>还不快去挑！</p>
+            </div>
+            <router-link
+                to="/">
+                <div class="blank-button">
+                    去挑好货
+                </div>
+            </router-link>
+        </div>
+        <section
+            v-else
+            class="store">
             <div
                 v-for="(item,index) in goodsList.cartItemList"
                 :key="index"
@@ -44,6 +66,7 @@
                 </dd>
             </div>
         </section>
+        <recommend type="cart" />
         <van-submit-bar
             :price="sumPrice || 0"
             button-text="提交订单"
@@ -65,17 +88,20 @@ import check from '../components/basic/check'
 import numberCount from '../components/numberCount'
 import AccountLogic from '@/logic/account'
 import { post } from '@/http-handle/http2.js'
+import recommend from '../components/recommend'
 export default {
     components: {
         tabbar,
         check,
-        numberCount
+        numberCount,
+        recommend
     },
     data(){
         return{
             checkedAll: false,
             goodsList: {},
-            checkIds: []
+            checkIds: [],
+            loading: true
         }
     },
     computed: {
@@ -92,6 +118,14 @@ export default {
                 })
             }
             return sumPrice
+        },
+        hasGoods () {
+            if(!this.goodsList.cartItemList) {
+                return false
+            }else if(this.goodsList.cartItemList&&!this.goodsList.cartItemList.length) {
+                return false
+            }
+            return true
         }
     },
     created() {
@@ -100,6 +134,7 @@ export default {
     methods: {
         ...mapActions(['actionPopupUIMessageShow']),
         loadData() {
+            this.loading = true
             post('/shoppingcart/query', {
                 vipVersion: false,
                 userId: this.userId
@@ -109,16 +144,19 @@ export default {
                     return
                 }else {
                     let isAllChecked = true
-                    this.goodsList = data.shops[0].campaignList[0]
-                    let itemList = this.goodsList.cartItemList
-                    itemList.forEach((item, index) => {
-                        item.t_check = false
-                        item.t_check = this.setDefaultCheck(item)
-                        if(item.t_check) this.checkIds.push(item.id)
-                        if(!item.t_check) isAllChecked = false
-                    })
-                    this.checkedAll = isAllChecked
+                    if(data.shops) {
+                        this.goodsList = data.shops[0].campaignList[0]
+                        let itemList = this.goodsList.cartItemList
+                        itemList.forEach((item, index) => {
+                            item.t_check = false
+                            item.t_check = this.setDefaultCheck(item)
+                            if(item.t_check) this.checkIds.push(item.id)
+                            if(!item.t_check) isAllChecked = false
+                        })
+                        this.checkedAll = isAllChecked
+                    }
                 }
+                this.loading = false
             })
         },
         onSubmit() {
@@ -133,10 +171,8 @@ export default {
             // let shops = this.shops
             item.t_check = !item.t_check
             this.stash(item.id, item.t_check ? 1 : 2)
-            // 修改店铺
             if (item.t_check) {
                 this.checkIds.push(item.id)
-                // this.checkShop(shop)
             } else {
                 // shop.t_check = false
                 this.checkIds.forEach((checkId, k) => {
@@ -145,9 +181,25 @@ export default {
                     }
                 })
             }
-            // 修改全选
-            // this.checkAll(shops)
-            // this.calculateByCampaign(this.goodsList, shop, n)
+            this.checkedAll = this.isAllChecked()
+        },
+        isAllChecked () {
+            let goodsIds = []
+            let goodsList = this.goodsList.cartItemList
+            let isAllChecked = true
+            goodsList.forEach(goods => {
+                goodsIds.push(goods.id)
+            })
+            if(!this.checkIds.length){
+                isAllChecked = false
+            }else {
+                this.checkIds.forEach(id => {
+                    if (goodsIds.indexOf(id) == -1 || goodsList.length != this.checkIds.length) {
+                        isAllChecked = false
+                    }
+                })
+            }
+            return isAllChecked
         },
         stash (ids, type) {
             // type=1 add type=2 remove
@@ -225,18 +277,20 @@ export default {
             });
         },
         checkAll () {
-            let { goodsList:{ cartItemList:list }, checkedAll} = this
-            checkedAll = !checkedAll
-            list.forEach((item, index) => {
-                if (!checkedAll) {
-                    this.stash(item.id, 2)
-                    item.t_check = false
-                }else {
-                    this.stash(item.id, 1)
-                    item.t_check = true
-                }
-            })
-            this.checkIds = JSON.parse(localStorage.getItem('stash_cart')) || []
+            if (this.hasGoods){
+                let { goodsList:{ cartItemList:list }, checkedAll} = this
+                checkedAll = !checkedAll
+                list.forEach((item, index) => {
+                    if (!checkedAll) {
+                        this.stash(item.id, 2)
+                        item.t_check = false
+                    }else {
+                        this.stash(item.id, 1)
+                        item.t_check = true
+                    }
+                })
+                this.checkIds = JSON.parse(localStorage.getItem('stash_cart')) || []
+            }
         },
         eventSkuNum (number, item) {
             item.itemNum = number[0]
@@ -248,11 +302,6 @@ export default {
             }).then(({desc, code}) => {
                 if(code*1 != 10000 ) this.actionPopupUIMessageShow(desc)
             })
-            if (number[1]) {
-
-            } else {
-
-            }
         }
     }
 }
@@ -261,6 +310,43 @@ export default {
 <style lang="less" scoped>
 .van-submit-bar {
     bottom: 0.457rem;
+}
+.blank {
+    margin-top:30%;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    i {
+        font-size: 1rem;
+        color: rgba(226,226,226,1);
+        margin-bottom: 0.2rem;
+    }
+    p {
+        font-size: 0.14rem;
+        font-family: PingFangSC-Regular,PingFang SC;
+        font-weight: 400;
+        color:rgba(155,155,155,1);
+        line-height: 0.25rem;
+        text-align: center;
+        &:last-child{
+            margin-bottom: 0.2rem;
+        }
+    }
+    .blank-button {
+        width:1.84rem;
+        height: 0.40rem;
+        background:rgba(207,20,39,1);
+        border-radius: 0.2rem;
+        font-size: 0.16rem;
+        font-family:PingFangSC-Regular,PingFang SC;
+        font-weight:400;
+        color:rgba(255,255,255,1);
+        line-height: 0.23rem;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+    }
 }
 .safe-info {
     height: 0.3rem;
@@ -296,7 +382,7 @@ export default {
 .store{
     margin-top: .1rem;
     background: #fff;
-    margin-bottom: 1.07rem;
+    margin-bottom: 0.1rem;
     .item-div{
         overflow: hidden;
         width: 100%;

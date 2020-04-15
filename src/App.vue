@@ -1,6 +1,9 @@
 <template>
     <div id="app">
-        <router-view />
+        <keep-alive>
+            <router-view v-if="$route.meta.keepAlive" />
+        </keep-alive>
+        <router-view v-if="!$route.meta.keepAlive" />
         <vuex-message />
     </div>
 </template>
@@ -40,6 +43,7 @@ export default {
 <style lang="less">
 // @import "./assets/css/font.less";
 @import "./assets/css/style.less";
+// @import "./assets/css/style";
 // @import "./assets/css/grid.less";
 // @import "./assets/css/app.less";
 // @import "./assets/css/button.less";
