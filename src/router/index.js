@@ -64,7 +64,7 @@ export default new Router({
             path: '/userinfo',
             name: 'userinfo',
             meta: {
-                title: '编辑个人信息''
+                title: '编辑个人信息'
             },
             component: function (resolve) {
                 require(['../view/userinfo'], resolve)

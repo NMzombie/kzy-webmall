@@ -88,6 +88,9 @@ export default {
             post('/account/editUserInfo',postData).then(({data,desc,code}) => {
                 if (code*1 == 10000) {
                     this.actionPopupUIMessageShow('保存成功！')
+                    setTimeout(() => {
+                        this.$router.back(-1)
+                    },1200)
                 }else {
                     this.actionPopupUIMessageShow(desc)
                 }

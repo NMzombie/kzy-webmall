@@ -75,10 +75,16 @@ export default {
             })
         },
         onAdd() {
-            Toast('新增地址');
+            this.$router.push({
+                name: 'address',
+                params: {id: '0'}
+            })
         },
         onEdit(item, index) {
-            Toast('编辑地址:' + index);
+            this.$router.push({
+                name: 'address',
+                params: {id: item.id}
+            })
         }
     }
 }
