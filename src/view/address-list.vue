@@ -11,6 +11,7 @@
             :disabled-list="disabledList"
             disabled-text="以下地址超出配送范围"
             default-tag-text="默认"
+            @click-item="addressChoose"
             @add="onAdd"
             @edit="onEdit" />
     </div>
@@ -20,6 +21,7 @@
 import { Toast } from 'vant';
 import AccountLogic from '@/logic/account'
 import { post } from '@/http-handle/http2.js'
+import queryString from 'query-string'
 export default {
     data() {
         return {
@@ -42,9 +44,44 @@ export default {
         }
     },
     created () {
+        console.log(this.build_redirect_path(this.$route.query.redirect,this.chosenAddressId))
         this.initData()
     },
     methods: {
+        check_from_trade_check_page(query) {
+            return query && query.from == 'pay-check'
+        },
+        redirect_path_addressId (redirect_path){
+            let path = decodeURIComponent(redirect_path)
+            let index = path.indexOf('?')
+            let base
+
+            if (index > -1) {
+                base = path.substr(0, index)
+            } else {
+                base = path
+            }
+
+            let query = queryString.parse(path.replace(base, ''))
+            return query.addressId
+        },
+        // 根据传入的redirect_path，构建新的redirect_path。追加或替换addressId参数
+        build_redirect_path (redirect_path, addressId) {
+            let path = decodeURIComponent(redirect_path)
+            let index = path.indexOf('?')
+            let base
+
+            if (index > -1) {
+                base = path.substr(0, index)
+            } else {
+                base = path
+            }
+
+            let query = queryString.parse(path.replace(base, ''))
+            query.addressId = addressId
+
+            return base + '?' + decodeURIComponent(queryString.stringify(query))
+        },
         initData() {
             this.loading = true
             let userId = this.userId
@@ -68,11 +105,21 @@ export default {
                             break;
                         }
                     }
-                    this.chosenAddressId = list[0].id
+                    if(!this.redirect_path_addressId(this.$route.query.redirect)) {
+                        this.chosenAddressId = list[0].id
+                    } else {
+                        this.chosenAddressId = parseInt(this.redirect_path_addressId(this.$route.query.redirect))
+                    }
                     this.list = list
                 }
                 this.loading = false
             })
+        },
+        addressChoose() {
+            if(!this.check_from_trade_check_page(this.$route.query)) return
+            let redirect_path = this.$route.query.redirect
+            let redirectUrl = this.build_redirect_path(redirect_path,this.chosenAddressId)
+            this.$router.push(redirectUrl)
         },
         onAdd() {
             this.$router.push({
@@ -82,8 +129,8 @@ export default {
         },
         onEdit(item, index) {
             this.$router.push({
-                name: 'address',
-                params: {id: item.id}
+                path: '/address',
+                query: {addressId: item.id}
             })
         }
     }

@@ -2,7 +2,6 @@
 // const { VUE_APP_MAIN_HOSTNAME: main_hostname, VUE_APP_REPLACED_MAIN_HOSTNAME: replaced_main_hostname } = process.env;
 const main_hostname = 'ngmm001.com'
 const replaced_main_hostname = 'ngmm365.com'
-// 新细胞主环境新域名
 const cell_main_hostname = 'nicoschool001.com'
 
 const map = {
@@ -509,18 +508,6 @@ const config = Object.assign({}, map.base, map[VUE_APP_API_ENV])
 
 let wxconfig = {}
 
-// if (VUE_APP_API_ENV == 'pro') {
-//     wxconfig = {
-//         //(糕妈优选)
-//         appId: VUE_APP_APPID || "wx1a3fbd14d1427477",
-//         appId_zj:VUE_APP_APPID_ZJ || "wxcc30c759f7fb5f22",//早教
-//         appId_gj:VUE_APP_APPID_GJ || "wx63a5be2fa081c8ad",//跨境
-//         appId_xy:VUE_APP_APPID_XY || "wx18b28466a68944a4",//年糕妈妈学院
-//         appId_cell: VUE_APP_APPID_CELL || 'wx3369d5dc7cd27971', // 年糕妈妈小学堂
-//         loginCallbackUrl:`https://callback.${main_hostname}/account/wechatAuth/callback`,
-//         authorizeCallbackUrl:`https://callback.${main_hostname}/account/wechatAuth/callback`,
-//     }
-// } else if (VUE_APP_API_ENV == 'beta') {
 wxconfig = {
     // (辅食小店的)微信授权的appid
     appId:"wx8aae36b94fe14a70",
@@ -532,30 +519,6 @@ wxconfig = {
     authorizeCallbackUrl:"http://callback.ngmm001.com/account/wechatAuth/callback",
     logoutUrl: "http://callback.ngmm001.com/account/wechatAuth/logout",
 }
-// } else if (VUE_APP_API_ENV == 'test') {
-//     wxconfig = {
-//         //(糕妈优选)
-//         appId:"wx1a3fbd14d1427477",
-//         appId_gj:"wxf292488bb1d28004",
-//         appId_zj:"wx8aae36b94fe14a70",
-//         appId_xy:"wxf292488bb1d28004",
-//         appId_cell: 'wx83d7bcc9ac31941f',
-//         loginCallbackUrl : "",
-//         authorizeCallbackUrl : "",
-//     }
-// } else {
-//     wxconfig = {
-//         // (辅食小店的)微信授权的appid
-//         appId:"wx8aae36b94fe14a70",
-//         appId_zj:"wxf292488bb1d28004",
-//         appId_gj:"wxf292488bb1d28004",//糕妈优选
-//         appId_xy:"wx8aae36b94fe14a70",//年糕妈妈学院
-//         appId_cell: 'wx8aae36b94fe14a70',
-//         loginCallbackUrl : "http://callback.ngmm001.com/account/wechatAuth/callback",
-//         authorizeCallbackUrl : "http://callback.ngmm001.com/account/wechatAuth/callback",
-//         logoutUrl: "http://callback.ngmm001.com/account/wechatAuth/logout",
-//     }
-// }
 
 // 当API_ENV为 local时，URL可以根据第二个参数设置。
 function getApiUrl(url, debugEnv) {
@@ -575,15 +538,14 @@ function getApiUrl(url, debugEnv) {
         }
     }
 
-    var api_url_map = ConfigUrls.api_url_map;
-    var match = false;
-    var match_base_url = '';
-    for (var key in api_url_map) {
+    let api_url_map = ConfigUrls.api_url_map;
+    let match = false;
+    let match_base_url = '';
+    for (let key in api_url_map) {
         if (url.indexOf(key) == 0) {
             match = true;
-            var size = api_url_map[key].length
 
-            match_base_url = api_url_map[key][Math.floor(Math.random() * size)];
+            match_base_url = api_url_map[key];
             break;
         }
     }

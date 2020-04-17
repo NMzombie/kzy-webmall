@@ -70,6 +70,7 @@
         <van-submit-bar
             :price="sumPrice || 0"
             button-text="提交订单"
+            :disabled="checkIds.length == 0"
             @submit="onSubmit">
             <van-checkbox
                 v-model="checkedAll"
@@ -160,7 +161,27 @@ export default {
             })
         },
         onSubmit() {
-
+            let goodsIds = []
+            let num = []
+            let goodsSku = []
+            this.goodsList.cartItemList.forEach((item, index) => {
+                this.checkIds.forEach((id, i) => {
+                    if(id == item.id) {
+                        goodsIds.push(item.goodsId)
+                        goodsSku.push(item.skuId)
+                        num.push(item.itemNum)
+                    }
+                })
+            })
+            this.$router.push({
+                path:'/pay-check',
+                query: {
+                    addressId: "",
+                    goodsIds,
+                    goodsSku,
+                    num
+                }
+            })
         },
         goDetail(goodsId) {
             this.$router.push({

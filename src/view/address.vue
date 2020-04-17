@@ -2,7 +2,7 @@
     <div>
         <van-address-edit
             :area-list="areaList"
-            :show-delete="$route.params.id != 0"
+            :show-delete="$route.query.addressId != 0"
             show-set-default
             :address-info="AddressInfo"
             :area-columns-placeholder="['请选择', '请选择', '请选择']"
@@ -42,7 +42,7 @@ export default {
     },
     methods: {
         initData(){
-            let id = this.$route.params.id
+            let id = this.$route.query.addressId
             let userId = this.userId
             if (id != 0){
                 post('/account/delivery_address/list',{userId}).then(({code,data,desc}) => {
@@ -69,7 +69,7 @@ export default {
             }
         },
         onSave(content) {
-            let id = this.$route.params.id
+            let id = this.$route.query.addressId
             let userId = this.userId
             const {name,tel: phone,province,city,county: area,addressDetail: address,isDefault} = content
             let postData = {
@@ -109,7 +109,7 @@ export default {
             })
         },
         onDelete() {
-            let id = this.$route.params.id
+            let id = this.$route.query.addressId
             let userId = this.userId
             post('/account/delivery_address/remove',{id,userId}).then(({code,data,desc}) => {
                 if(code*1 !== 10000) {

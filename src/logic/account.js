@@ -2,8 +2,6 @@ import common from '@/common'
 import Cookie from 'js-cookie'
 import systemTool from '@/tools/system'
 import { MessageBox, Toast } from 'mint-ui';
-// import http from 'http-handle'
-// import { getDistUrl, locationHref, locationReplace } from '@/tools/changeLocation.js'
 // 主域名
 // const { VUE_APP_MAIN_HOSTNAME: main_hostname } = process.env;
 const main_hostname = 'ngmm001.com'
@@ -171,13 +169,6 @@ export default {
          * 微信授权登录返回4个字段在cookie中
          */
         if (Cookie.get('app_id')) {
-            // app_id
-            // user_id
-            // access_token
-            // open_id
-
-            // client_token用openID代替，部分cookie中没有的字段放在localstorage，避免每次请求都传输。
-
             localStorage.setItem('client_token', Cookie.get('open_id') || this.getUUID())
             localStorage.setItem('network_type', navigator.connection && navigator.connection.type || "3g")
             localStorage.setItem('platform', "wechat")
@@ -186,37 +177,6 @@ export default {
             localStorage.setItem('client_version', "2.0.1")
             localStorage.setItem('login_type', "wechat")
 
-        } else if (platform == "ios" || platform == "android") {
-            /*
-             * app需要返回这8个cookie字段，新增一个login_type字段。
-             */
-
-            // user_id
-            // access_token
-            // platform
-            // client_token
-            // system_version
-            // client_version
-            // method_version
-            // network_type
-
-            // login_type   @todo 增加一个字段标识，登录类型4种：app_mobile（app中手机号）,app_wechat（app中微信）,wechat,h5_mock
-
-
-            //app环境，什么都不用做。
-        } else {
-            //模拟登录环境
-
-            //模拟环境，cookie存的是mock_app_id，用于区分微信授权登录的情况
-            localStorage.setItem('login_type', "h5_mock")
-            if (!localStorage.getItem('client_token') || localStorage.getItem('client_token') == '123') {
-                localStorage.setItem('client_token', Cookie.get('open_id') || this.getUUID())
-            }
-            localStorage.setItem('network_type', navigator.connection && navigator.connection.type || "3g")
-            localStorage.setItem('platform', "wechat")
-            localStorage.setItem('method_version', "1.0")
-            localStorage.setItem('system_version', "10.1.1")
-            localStorage.setItem('client_version', "2.0.1")
         }
     },
 
@@ -309,69 +269,6 @@ export default {
             }
         }
     },
-    // checkOpenId(option) { //判断是否授权
-    //     let { appId, url, isReplace } = option;
-    //     let userId = this.getUserId(),
-    //         key = appId + '_' + userId + 'openId',
-    //         openId = localStorage.getItem(key),
-    //         self = this;
-    //     if (openId) {
-    //         if (isReplace) {
-    //             // window.location.replace(url)
-    //             locationReplace(url)
-    //         } else {
-    //             locationHref(url)
-    //             // window.location.href = url;
-    //         }
-    //     } else {
-    //         http.AjaxCheckOpenIdExist({
-    //             "appId": appId,
-    //             "userId": userId,
-    //         }, function(obj) {
-    //             if (obj && obj.code === 10000) {
-    //                 if (obj.data) {
-    //                     localStorage.setItem(key, obj.data);
-    //                     if (isReplace) {
-    //                         // window.location.replace(url)
-    //                         locationReplace(url)
-    //                     } else {
-    //                         window.location.href = url;
-    //                     }
-    //                 }
-    //             } else {
-    //                 self.authorize(appId, url, 'kuajing');
-    //             }
-    //         });
-    //     }
-    // },
-
-    // checkOpenIdNew (option) {
-    //     return new Promise((resolve, reject) => {
-    //         let { appId, url } = option;
-    //         let userId = this.getUserId(),
-    //             key = appId + '_' + userId + 'openId',
-    //             openId = localStorage.getItem(key),
-    //             self = this;
-    //         if (openId) {
-    //             return resolve()
-    //         } else {
-    //             http.AjaxCheckOpenIdExist({
-    //                 "appId": appId,
-    //                 "userId": userId,
-    //             }, function(obj) {
-    //                 if (obj && obj.code === 10000) {
-    //                     if (obj.data) {
-    //                         localStorage.setItem(key, obj.data);
-    //                         return resolve()
-    //                     }
-    //                 } else {
-    //                     self.authorize(appId, url, 'kuajing');
-    //                 }
-    //             });
-    //         }
-    //     })
-    // },
-
     setNgpf(option) {
         //记录来自于哪个平台  _ngpf  比如糕妈优选，宝宝辅食日至
         let platform, zjChannelCode;

@@ -37,7 +37,6 @@ Vue.http.interceptors.push((request, next) => {
     // 请求地址映射
     request.url = common.get_api_url(request.url);
 
-
     // 请求参数构建
     let data = request.body || {};
     let auth = AccountLogic.buildHttpHeaders();
@@ -55,14 +54,6 @@ Vue.http.interceptors.push((request, next) => {
             //需要登录或者access-token缺失，支付不匹配
             if (obj.code == 11991019 || obj.code == 11991011 || obj.code == 11020013) {
 
-                // // @todo
-                // Toast({
-                //   message: `错误码：${obj.code},错误信息：${obj.desc}`,
-                //   position: 'bottom',
-                //   duration: 5000
-                // });
-                // return
-
                 AccountLogic.cleanContext()
 
                 // 判断是否是强制需要登录的页面
@@ -79,21 +70,6 @@ Vue.http.interceptors.push((request, next) => {
                 // }
             }
         }
-        // 灰测用户标识
-        // const currentUserId = auth['x-user-id']
-        // let cookie_abtestUser = AccountLogic.getAbtestUser()
-        // if (cookie_abtestUser) {
-        //     cookie_abtestUser = cookie_abtestUser === 'true'
-        // }
-        // // cookie中存在abtestUser时
-        // if (typeof cookie_abtestUser === 'boolean') {
-        //     localStorage.setItem('abTestUserData', JSON.stringify({
-        //         success: cookie_abtestUser,
-        //         userId: currentUserId
-        //     }))
-        //     if (!!cookie_abtestUser) return
-        // }
-        // if (currentUserId) judgeAbTestUser(response, { currentUserId })
     });
 });
 

@@ -59,6 +59,15 @@ export default new Router({
             component: function (resolve) {
                 require(['../view/goods'], resolve)
             }
+        },{
+            path: '/pay-check',
+            name: 'pay-check',
+            meta: {
+                title: '订单结算'
+            },
+            component: function (resolve) {
+                require(['../view/pay-check.vue'], resolve)
+            }
         },
         {
             path: '/userinfo',
@@ -80,7 +89,7 @@ export default new Router({
                 require(['../view/address-list'], resolve)
             }
         },{
-            path: '/address/:id',
+            path: '/address',
             name: 'address',
             meta: {
                 title: '添加／编辑收货地址'

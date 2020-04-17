@@ -64,7 +64,9 @@
                     @click="addCart">
                     加入购物车
                 </button>
-                <button class="go-buy">
+                <button
+                    class="go-buy"
+                    @click="onBuy">
                     立即购买
                 </button>
             </div>
@@ -264,6 +266,20 @@ export default {
             }
             localStorage.setItem('stash_cart', JSON.stringify(cache))
         },
+        onBuy() {
+            let goodsIds = [this.p.id]
+            let num = [this.num]
+            let goodsSku = [this.skuId]
+            this.$router.push({
+                path:'/pay-check',
+                query: {
+                    addressId: "",
+                    goodsIds,
+                    goodsSku,
+                    num
+                }
+            })
+        }
     }
 
 }
