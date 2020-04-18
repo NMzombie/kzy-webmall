@@ -72,7 +72,6 @@
             </div>
         </div>
     </div>
-    </div>
 </template>
 
 <script>
@@ -224,14 +223,9 @@ export default {
             post('/cart/add', data).then(obj => {
                 if (obj.code == 10000) {
                     _this.actionPopupUIMessageShow('加入购物车成功!')
-
-                    // _this.actionAjaxCartNumber()
-
                     this.T = setTimeout(() => {
                         _this.hideSku()
                     }, 200)
-
-
                     _this.save(obj.data)
                 } else {
                     _this.actionPopupUIMessageShow(obj.desc)

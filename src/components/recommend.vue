@@ -2,14 +2,17 @@
     <section>
         <div
             :class="[type == 'cart' ? 'mb' : '','recommend']">
-            <div class="title">
+            <div
+                v-if="!(type == 'trade-list')"
+                class="title">
                 {{ type == "detail" ? '激情推荐' : '为你推荐' }}
             </div>
             <section v-if="type == 'detail'">
                 <div
                     v-for="(item,index) in dataList"
                     :key="index"
-                    class="box">
+                    class="box"
+                    @click="goLink(item.goodsId)">
                     <img
                         v-lazy="item.pictures[0]"
                         class="goods-img">
@@ -26,11 +29,12 @@
                     </div>
                 </div>
             </section>
-            <section v-else-if="type == 'cart'">
+            <section v-else-if="type == 'cart' || 'trade-list'">
                 <div
                     v-for="(item,index) in dataList"
                     :key="index"
-                    class="box">
+                    class="box"
+                    @click="this.$router.push('/goods/' + item.goodsId)">
                     <img
                         v-lazy="item.picture"
                         class="goods-img">
@@ -69,6 +73,7 @@ export default {
     },
     created() {
         this.initData()
+        window.scrollTo(0, 0)
     },
     methods: {
         ...mapActions(['actionPopupUIMessageShow']),
@@ -87,7 +92,7 @@ export default {
                         _this.actionPopupUIMessageShow(obj.desc || "网络请求失败")
                     }
                 })
-            } else if(this.type == "cart") {
+            } else if(this.type == "cart"||"trade-list") {
                 post('/cart/recommend',{userId}).then(({data,desc,code}) => {
                     if (code*1 != 10000){
                         _this.actionPopupUIMessageShow(obj.desc || "网络请求失败")
@@ -96,6 +101,9 @@ export default {
                     }
                 })
             }
+        },
+        goLink (id) {
+            this.$router.push('/goods/' + id)
         }
     }
 }

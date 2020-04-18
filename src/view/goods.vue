@@ -116,7 +116,7 @@
         <div class="tabbar">
             <router-link
                 class="item"
-                to="/cart">
+                to="/">
                 <img
                     src="../assets/home-new.png"
                     class="icon">
@@ -160,6 +160,13 @@
             :num="num"
             @closeSkuPop="closeSkuPop"
             @eventSkuNum="eventSkuNum" />
+        <div
+            v-if="showToTp"
+            class="scroll-top"
+            @click="backTop">
+            <van-icon name="arrow-up" />
+            <span>顶部</span>
+        </div>
     </div>
 </template>
 <script>
@@ -188,7 +195,8 @@ export default {
             showSku: false,
             num: 1,
             skuChoosed: [],
-            scroll: ''
+            scroll: '',
+            showToTp: false
         }
     },
     computed: {
@@ -208,11 +216,14 @@ export default {
     methods: {
         backTopShow() {
             this.scroll = document.documentElement.scrollTop || document.body.scrollTop
-            if(this.scroll>390) {
-                console.log('11111111')
+            if(this.scroll>400) {
+                this.showToTp = true
             } else {
-                console.log('2222222')
+                this.showToTp = false
             }
+        },
+        backTop() {
+            window.scrollTo(0, 0)
         },
         hidePopup () {
             this.popupShow = false
@@ -663,5 +674,30 @@ export default {
     width: 29%;
     font-family: PingFangSC-Regular,sans-serif;
   }
+}
+.scroll-top {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    font-size: 0.12rem;
+    position: fixed;
+    bottom: 0.64rem;
+    right: 0.15rem;
+    width: 0.45rem;
+    height: 0.45rem;
+    border-radius: 50%;
+    border: 1px solid #f3f3f3;
+    background: white;
+    text-align: center;
+    box-sizing: border-box;
+    color: #fd273f;
+    box-shadow: 0 0.06rem 0.2rem -0.05rem rgba(57, 106, 188, 0.3);
+    i {
+      font-size: 0.18rem;
+      line-height: 0.11rem;
+    }
+    span {
+      font-size: 0.14rem;
+    }
 }
 </style>

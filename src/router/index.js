@@ -70,6 +70,16 @@ export default new Router({
             }
         },
         {
+            path: '/trade-list/:id',
+            name: 'trade-list',
+            meta: {
+                title: '订单列表'
+            },
+            component: function (resolve) {
+                require(['../view/trade-list.vue'], resolve)
+            }
+        },
+        {
             path: '/userinfo',
             name: 'userinfo',
             meta: {
@@ -96,6 +106,16 @@ export default new Router({
             },
             component: function (resolve) {
                 require(['../view/address.vue'], resolve)
+            }
+        },
+        {
+            path: '/name-confirm',
+            name: 'name-confirm',
+            meta: {
+                title: '实名认证'
+            },
+            component: function (resolve) {
+                require(['../view/name-confirm.vue'], resolve)
             }
         }
     ]

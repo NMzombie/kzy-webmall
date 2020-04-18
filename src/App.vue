@@ -1,14 +1,28 @@
 <template>
     <div id="app">
         <keep-alive>
-            <router-view v-if="$route.meta.keepAlive" />
+            <router-view
+                v-if="$route.meta.keepAlive"
+                :key="Key" />
         </keep-alive>
-        <router-view v-if="!$route.meta.keepAlive" />
+        <router-view
+            v-if="!$route.meta.keepAlive"
+            :key="Key" />
         <vuex-message />
     </div>
 </template>
 <script>
 export default {
+    data(){
+        return {
+            Key: ''
+        }
+    },
+    watch: {
+        $route: function(newUrl, oldUrl) {
+            this.Key = new Date().getTime();
+        }
+    },
     created(){
         this.initDpr()
     },

@@ -89,7 +89,7 @@ export default {
                 if (code*1 == 10000) {
                     this.actionPopupUIMessageShow('保存成功！')
                     setTimeout(() => {
-                        this.$router.back(-1)
+                        this.$router.push('/ucenter')
                     },1200)
                 }else {
                     this.actionPopupUIMessageShow(desc)

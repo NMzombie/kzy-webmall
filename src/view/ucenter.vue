@@ -22,7 +22,9 @@
             </div>
         </section>
         <section class="tabbar">
-            <div class="tabbar-top">
+            <div
+                class="tabbar-top"
+                @click="$router.push('/trade-list/0')">
                 <h1>我的订单</h1>
                 <span>查看全部
                     <van-icon name="arrow" />
@@ -30,22 +32,30 @@
             </div>
             <div
                 class="tabbar-menu">
-                <div class="menu-item">
+                <div
+                    class="menu-item"
+                    @click="$router.push('/trade-list/1')">
                     <van-icon
                         name="pending-payment" />
                     <p>待付款</p>
                 </div>
-                <div class="menu-item">
+                <div
+                    class="menu-item"
+                    @click="$router.push('/trade-list/2')">
                     <van-icon
                         name="send-gift-o" />
                     <p>待发货</p>
                 </div>
-                <div class="menu-item">
+                <div
+                    class="menu-item"
+                    @click="$router.push('/trade-list/3')">
                     <van-icon
                         name="logistics" />
                     <p>待收货</p>
                 </div>
-                <div class="menu-item">
+                <div
+                    class="menu-item"
+                    @click="$router.push('/trade-list/4')">
                     <van-icon
                         name="paid" />
                     <p>交易成功</p>
@@ -73,12 +83,14 @@
                     name="location-o" />
                 <p>地址管理</p>
             </router-link>
-            <div class="menu-item border-right">
+            <router-link
+                to="/name-confirm"
+                class="menu-item border-right">
                 <van-icon
                     color="#0bb"
                     name="friends-o" />
                 <p>实名认证</p>
-            </div>
+            </router-link>
             <div class="menu-item border-right">
                 <van-icon
                     color="rgb(74, 144, 226)"

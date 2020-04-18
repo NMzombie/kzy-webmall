@@ -25,15 +25,7 @@ export default {
     getUserId() {
         let app_id = Cookie.get('app_id') || "";
         let platform = Cookie.get("platform") ? Cookie.get("platform").toLowerCase() : "";
-        //有appid就认为是微信授权登录
-        if (app_id) {
-            // 比较app_id和当前配置的appid是否一致
-            if (app_id == common.config.appId || app_id == common.config.appId_xy || app_id == common.config.appId_zj || app_id == common.config.appId_cell) {
-                return Cookie.get('user_id') || 0;
-            } else {
-                return 0;
-            }
-        } else if (platform == 'ios' || platform == 'android') {
+        if (platform == 'ios' || platform == 'android') {
             //判断platform是iOS和android的，认为是app登录。
             return Cookie.get('user_id') || 0;
         } else {
@@ -164,10 +156,6 @@ export default {
     initContext() {
         let platform = Cookie.get("platform") ? Cookie.get("platform").toLowerCase() : "";
 
-        //
-        /**
-         * 微信授权登录返回4个字段在cookie中
-         */
         if (Cookie.get('app_id')) {
             localStorage.setItem('client_token', Cookie.get('open_id') || this.getUUID())
             localStorage.setItem('network_type', navigator.connection && navigator.connection.type || "3g")
@@ -267,36 +255,6 @@ export default {
             } else {
                 window.location.href = "/login?redirect=" + redirect_path;
             }
-        }
-    },
-    setNgpf(option) {
-        //记录来自于哪个平台  _ngpf  比如糕妈优选，宝宝辅食日至
-        let platform, zjChannelCode;
-        platform = getQueryString('_ngpf');
-        zjChannelCode = getQueryString('zjChannelCode');
-
-        if (platform) {
-            localStorage.setItem("_ngpf", trim(platform));
-            sessionStorage.setItem("_ngpf", trim(platform));
-        }
-
-        //只取最开始的一个，在早教主页资源位有时处会出现2个zjChannelCode
-        //url 链接上有 zjChannelCode，且本地没有，除/education/zjtradelist这个地址外，把渠道码存下
-        if (zjChannelCode && !sessionStorage.getItem('zjChannelCode') && !(window.location.href.indexOf('/education/zjtradelist') > -1)) {
-            sessionStorage.setItem("zjChannelCode", trim(zjChannelCode));
-        }
-
-        function trim(s) {
-            return s.replace(/(^\s*)|(\s*$)/g, "");
-        }
-
-        function getQueryString(name) {
-            let reg = new RegExp('(^|&)' + name + '=([^&]*)(&|$)', 'i');
-            let r = window.location.search.substr(1).match(reg);
-            if (r != null) {
-                return unescape(r[2]);
-            }
-            return null;
         }
     }
 }
