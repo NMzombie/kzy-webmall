@@ -123,15 +123,16 @@ export default {
         },
         onAdd() {
             this.$router.push({
-                name: 'address',
-                params: {id: '0'}
+                path: '/address',
+                query: {addressId: '0'}
             })
         },
         onEdit(item, index) {
+            console.log(item,'尊贵6级号嗷')
             this.$router.push({
                 path: '/address',
                 query: {addressId: item.id}
-            })
+            }, onComplete => { }, onAbort => { })
         }
     }
 }

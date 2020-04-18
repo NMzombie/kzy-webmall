@@ -34,7 +34,7 @@
                     v-for="(item,index) in dataList"
                     :key="index"
                     class="box"
-                    @click="this.$router.push('/goods/' + item.goodsId)">
+                    @click="$router.push('/goods/' + item.goodsId)">
                     <img
                         v-lazy="item.picture"
                         class="goods-img">
