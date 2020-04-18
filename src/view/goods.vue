@@ -11,6 +11,11 @@
                 </mt-swipe-item>
             </mt-swipe>
         </div>
+        <div
+            v-if="loading"
+            class="loading_new_wrap">
+            <div :class="['liu']" />
+        </div>
         <div class="container">
             <div class="box-price">
                 <div
@@ -168,6 +173,7 @@
             <span>顶部</span>
         </div>
     </div>
+    </div>
 </template>
 <script>
 import { mapActions } from 'vuex'
@@ -196,7 +202,8 @@ export default {
             num: 1,
             skuChoosed: [],
             scroll: '',
-            showToTp: false
+            showToTp: false,
+            loading: true
         }
     },
     computed: {
@@ -236,6 +243,7 @@ export default {
             this.skuChoosed = val
         },
         getGoodsInfo() {
+            this.loading = true
             let data = {goodsId: this.pid,userId: this.userId}
             post('/goods/detail',data).then(res => {
                 let data = res.data
@@ -247,9 +255,9 @@ export default {
                 this.minPrice = Math.min.apply(0, price) / 100
                 this.maxPrice = Math.max.apply(0, price) / 100
                 this.$http.get(this.p.details).then(obj => {
-                    console.log(obj)
                     this.content = obj.body
                 })
+                this.loading = false
             }).catch(obj => {})
         },
         eventSkuNum(num) {
