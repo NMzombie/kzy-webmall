@@ -49,7 +49,7 @@
                             :checked="item.t_check" />
                     </div>
                     <div class="img-wrap">
-                        <img :src="item.pictureUrl">
+                        <img v-lazy="item.pictureUrl">
                     </div>
                     <div class="info-wrap">
                         <h3>{{ item.goodsName }}</h3>
@@ -90,6 +90,7 @@ import numberCount from '../components/numberCount'
 import AccountLogic from '@/logic/account'
 import { post } from '@/http-handle/http2.js'
 import recommend from '../components/recommend'
+
 export default {
     components: {
         tabbar,

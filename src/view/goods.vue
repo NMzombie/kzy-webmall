@@ -20,7 +20,12 @@
             <div class="box-price">
                 <div
                     class="box-price-left">
-                    <span class="price-sell">￥</span><span class="price-s">{{ minPrice }}<span class="line"> - </span>{{ maxPrice }}</span>
+                    <div v-if="p.existSku">
+                        <span class="price-sell">￥</span><span class="price-s">{{ minPrice }}<span class="line"> - </span>{{ maxPrice }}</span>
+                    </div>
+                    <div v-else>
+                        <span class="price-sell">￥</span><span class="price-s">{{ goodsPrice }}</span>
+                    </div>
                 </div>
                 <span class="sale">已售{{ p.sales > 10000 ? (((p.sales-p.sales%1000)/10000+'万')) : (p.sales) }}</span>
             </div>
@@ -165,18 +170,20 @@
             :num="num"
             @closeSkuPop="closeSkuPop"
             @eventSkuNum="eventSkuNum" />
-        <div
-            v-if="showToTp"
-            class="scroll-top"
-            @click="backTop">
-            <van-icon name="arrow-up" />
-            <span>顶部</span>
-        </div>
+        <transition name="fade">
+            <div
+                v-if="showToTp"
+                class="scroll-top"
+                @click="backTop">
+                <van-icon name="arrow-up" />
+                <span>顶部</span>
+            </div>
+        </transition>
     </div>
     </div>
 </template>
 <script>
-import { mapActions } from 'vuex'
+import { Toast } from 'vant';
 import { post } from "@/http-handle/http2.js";
 import noStockPopup from '../components/noStockPopup'
 import noStock from '../components/noStock'
@@ -203,7 +210,8 @@ export default {
             skuChoosed: [],
             scroll: '',
             showToTp: false,
-            loading: true
+            loading: true,
+            goodsPrice: ''
         }
     },
     computed: {
@@ -246,14 +254,23 @@ export default {
             this.loading = true
             let data = {goodsId: this.pid,userId: this.userId}
             post('/goods/detail',data).then(res => {
+                if(res.code*1 !== 10000) {
+                    Toast(res.desc || '网络连接失败！')
+                    this.loading = false
+                    return
+                }
                 let data = res.data
                 this.p = data
-                let price = []
-                this.p.skus.forEach((item,i) => {
-                    price.push(item.price)
-                })
-                this.minPrice = Math.min.apply(0, price) / 100
-                this.maxPrice = Math.max.apply(0, price) / 100
+                if(this.p.existSku) {
+                    let price = []
+                    this.p.skus.forEach((item,i) => {
+                        price.push(item.price)
+                    })
+                    this.minPrice = Math.min.apply(0, price) / 100
+                    this.maxPrice = Math.max.apply(0, price) / 100
+                } else {
+                    this.goodsPrice = this.p.sellPrice/100
+                }
                 this.$http.get(this.p.details).then(obj => {
                     this.content = obj.body
                 })
@@ -707,5 +724,11 @@ export default {
     span {
       font-size: 0.14rem;
     }
+}
+.fade-enter-active, .fade-leave-active {
+  transition: opacity .3s;
+}
+.fade-enter, .fade-leave-to {
+  opacity: 0;
 }
 </style>

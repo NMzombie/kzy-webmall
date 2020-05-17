@@ -128,7 +128,6 @@ export default {
             })
         },
         onEdit(item, index) {
-            console.log(item,'尊贵6级号嗷')
             this.$router.push({
                 path: '/address',
                 query: {addressId: item.id}

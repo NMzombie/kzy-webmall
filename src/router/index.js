@@ -117,6 +117,36 @@ export default new Router({
             component: function (resolve) {
                 require(['../view/name-confirm.vue'], resolve)
             }
+        },
+        {
+            path: '/search',
+            name: 'search',
+            meta: {
+                title: '搜索页'
+            },
+            component: function (resolve) {
+                require(['../view/search.vue'], resolve)
+            }
+        },
+        {
+            path: '/page/:id',
+            name: '首页',
+            meta: {
+                title: '首页'
+            },
+            component: function (resolve) {
+                require(['../view/micro-page.vue'], resolve)
+            }
+        },
+        {
+            path: '/knowledgePage/:id',
+            name: '课程页',
+            meta: {
+                title: '课程页'
+            },
+            component: function (resolve) {
+                require(['../view/knowledgePage.vue'], resolve)
+            }
         }
     ]
 })

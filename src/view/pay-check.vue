@@ -166,7 +166,7 @@ export default {
             })
         },
         goAddress() {
-            this.$router.push({
+            this.$router.replace({
                 path:'/address-list',
                 query:{
                     from: 'pay-check',
