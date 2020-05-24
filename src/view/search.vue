@@ -204,8 +204,8 @@ export default {
 .van-dropdown-menu {
   height: auto;
 }
-.van-ellipsis {
-  color: #ee0a24;
+.van-dropdown-menu__item .van-ellipsis{
+    color: #ee0a24;
 }
 .van-dropdown-menu__title::after {
   color: #ee0a24;

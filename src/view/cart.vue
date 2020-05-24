@@ -339,6 +339,7 @@ export default {
     flex-direction: column;
     justify-content: center;
     align-items: center;
+    margin-bottom: 0.4rem;
     i {
         font-size: 1rem;
         color: rgba(226,226,226,1);

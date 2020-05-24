@@ -25,13 +25,7 @@ export default {
     getUserId() {
         let app_id = Cookie.get('app_id') || "";
         let platform = Cookie.get("platform") ? Cookie.get("platform").toLowerCase() : "";
-        if (platform == 'ios' || platform == 'android') {
-            //判断platform是iOS和android的，认为是app登录。
-            return Cookie.get('user_id') || 0;
-        } else {
-            //模拟登录和其他情况
-            return Cookie.get('user_id') || 0;
-        }
+        return Cookie.get('user_id') || 0;
     },
     /**
      * 构建请求头参数

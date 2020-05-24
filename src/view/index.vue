@@ -1,6 +1,6 @@
 <template>
     <div>
-        <router-link to="/goods/42622">
+        <!-- <router-link to="/goods/42622">
             home
         </router-link>
         <router-link to="/search">
@@ -8,8 +8,8 @@
         </router-link>
         <router-link to="/page/968">
             page
-        </router-link>
-        <microPage id="968" />
+        </router-link> -->
+        <microPage id="991" />
         <tabbar />
     </div>
 </template>
