@@ -205,50 +205,5 @@ export default {
                 window.location.href = "/login?redirect=" + redirect_path;
             }
         }
-    },
-
-    /**
-     * 微信授权(不登录)，用于服务端获取openid,unionid。用于仅授权，不设置cookie。服务端根据state决定是否写cookie。后期可以和login合并。
-     * @param  {[type]} appId   [description]
-     * @param  {[type]} backUrl [description]
-     * @return {[type]}         [description]
-     */
-    authorize(appId, backUrl, state) {
-        let isApp = systemTool.isApp();
-        let isWechat = systemTool.isWechat();
-
-        if (isApp) {
-            let showLoging = sessionStorage.getItem('isLoging');
-            if (!showLoging) {
-                sessionStorage.setItem('isLoging', true);
-                NGJsBridge.showLoginConfirm();
-            }
-        } else if (isWechat) {
-            let app_id = appId || common.config.appId;
-            let currentUrl = backUrl || window.location.href;
-            state = state || 'state';
-            let redirect_uri = common.config.authorizeCallbackUrl + "?app_id=" + app_id + "&terminal=terminal&success_url=" + encodeURIComponent(currentUrl) + "&scope=snsapi_userinfo";
-
-            if (systemTool.isDev() || systemTool.isTest()) { // 本地环境，跳转到模拟登录页面
-                MessageBox.alert('未登录', '提示').then(()=>{
-                    window.location.href = '/mock-login'
-                })
-                return
-            }
-
-            window.location.href = 'https://open.weixin.qq.com/connect/oauth2/authorize?appid=' + app_id + '&redirect_uri=' + encodeURIComponent(redirect_uri) + '&response_type=code&scope=snsapi_userinfo&state=' + state + '#wechat_redirect';
-        } else {
-            let currentPath = backUrl || (window.location.pathname + window.location.search);
-
-            let redirect_path = encodeURIComponent(currentPath)
-
-            if (systemTool.isDev()) { // 本地环境，跳转到模拟登录页面
-                window.location.href = "/login?redirect=" + redirect_path + "&withMock=1";
-            } else if (systemTool.isTest()) { // 测试环境，跳转到模拟登录页面
-                window.location.href = "/login?redirect=" + redirect_path + "&withMock=1";
-            } else {
-                window.location.href = "/login?redirect=" + redirect_path;
-            }
-        }
     }
 }

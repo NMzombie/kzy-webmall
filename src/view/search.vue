@@ -5,7 +5,32 @@
             class="loading_new_wrap">
             <div :class="['liu']" />
         </div>
-        <form action="/">
+        <!-- <van-picker
+            v-if="showPrice"
+            title="价格区间"
+            show-toolbar
+            :columns="columns"
+            @confirm="onConfirm"
+            @cancel="Cancel"
+            @change="onChange" /> -->
+        <form
+            style="position:relative;text-algn:center;background: white;"
+            action="/">
+            <van-radio-group
+                v-model="radio"
+                style="position:absolute;top: 0.1rem;left: 0.15rem;">
+                <van-radio name="1">
+                    价格大于
+                </van-radio>
+                <van-radio name="2">
+                    价格小于
+                </van-radio>
+            </van-radio-group>
+            <!-- <button
+                style="position:absolute;top: 0.2rem;"
+                @click.stop.prevent="showPrice = true">
+                {{ '价格'+priceArea||'请选择价格范围' }}
+            </button> -->
             <van-search
                 v-model="keyword"
                 show-action
@@ -13,7 +38,14 @@
                 placeholder="请输入搜索关键词"
                 @search="onSearch"
                 @cancel="onCancel" />
+            <div style="clear:both" />
         </form>
+        <!-- <van-button
+            style="margin-left: 0.2rem;"
+            type="default"
+            @click="showPrice = true">
+            请选择价格范围
+        </van-button> -->
         <section
             v-if="!isSearched"
             class="search-history">
@@ -35,28 +67,64 @@
                     <p>{{ item }}</p>
                 </div>
             </div>
-        </section>
-        <section
-            v-if="isSearched"
-            class="result-list">
-            <div class="sorting-bar">
-                <div style="color: rgba(102, 102, 102, 0.9);">
-                    共{{ totalNumber }}个结果
-                </div>
-                <div>
-                    <van-dropdown-menu active-color="#ee0a24">
-                        <van-dropdown-item
-                            v-model="pageData.orderType"
-                            :options="sortOption" />
-                    </van-dropdown-menu>
+            <div class="container">
+                <p class="age">
+                    适龄选择
+                </p>
+                <div
+                    v-for="(item, index) in calssWords"
+                    :key="index"
+                    style="color:white;border: 1px solid rgb(255, 99, 116);background:rgb(255, 99, 116)"
+                    class="key-word"
+                    @click="onSearch(item)">
+                    <p>{{ item }}</p>
                 </div>
             </div>
-            <goodsList
-                :goods-list="searchResult"
-                :page="pageData.pageNumber"
-                :scroll-disabled="scrollDisabled"
-                @getDataList="getDataList" />
         </section>
+        <van-tabs
+            v-if="isSearched"
+            v-model="type"
+            sticky>
+            <van-tab
+                title="商品"
+                name="goods">
+                <section
+                    v-if="isSearched"
+                    class="result-list">
+                    <div class="sorting-bar">
+                        <!-- <div style="color: rgba(102, 102, 102, 0.9);">
+                            共{{ totalNumber }}个结果
+                        </div> -->
+                        <div>
+                            <van-dropdown-menu active-color="#ee0a24">
+                                <van-dropdown-item
+                                    v-model="pageData.orderType"
+                                    :options="sortOption" />
+                            </van-dropdown-menu>
+                        </div>
+                    </div>
+                    <goodsList
+                        :goods-list="searchResult"
+                        :page="pageData.pageNumber"
+                        :scroll-disabled="scrollDisabled"
+                        @getDataList="getDataList" />
+                </section>
+            </van-tab>
+
+            <van-tab
+                title="课程"
+                name="course">
+                <van-card
+                    v-for="(item,index) in courseResult"
+                    :key="index"
+                    tag="早教课程"
+                    :desc="item.subtitle"
+                    :title="item.name"
+                    :thumb="item.frontCover"
+                    @click="$router.push('/knowledgePage/'+item.id)" />
+            </van-tab>
+        </van-tabs>
+
         <transition name="fade">
             <div
                 v-if="showToTp"
@@ -74,6 +142,7 @@ import { Toast } from 'vant';
 import AccountLogic from '@/logic/account'
 import { post } from '@/http-handle/http2.js'
 import goodsList from '../components/goodsList'
+import localData from './goods'
 export default {
     components:{
         goodsList
@@ -82,12 +151,16 @@ export default {
         return {
             keyword: '',
             keyWordList: [],
+            calssWords: ['0-3个月','3-6个月','6-12个月','一年以上'],
             searchResult: [],
             totalNumber: 0,
             sortOption: [
                 { text: '综合排序', value: 1 },
                 { text: '最新', value: 2 },
                 { text: '最热', value: 3 },
+                { text: '价格小于100', value: 4 },
+                { text: '价格100-200', value: 5 },
+                { text: '价格200以上', value: 6 },
             ],
             pageData: {
                 keyWord:'',
@@ -99,13 +172,54 @@ export default {
             loadedNumber: 0,
             isSearched: false,
             loading: false,
-            showToTp: false
+            showToTp: false,
+            columns: ['大于', '小于'],
+            showPrice: false,
+            priceArea: '',
+            radio: '',
+            type: '',
+            courseResult: []
         }
     },
     watch: {
         'pageData.orderType': function(val) {
-            this.handleSearch(this.pageData.keyWord, 1,true)
-        }
+            if(val<4) {
+                this.handleSearch(this.pageData.keyWord, 1,true)
+            }
+            else if (val == 4) {
+                // this.handleSearch('',1,false)
+                this.searchResult = this.searchResult.filter((item,index) => {
+                    return item.sellPrice <= 10000
+                })
+            }else if (val == 5) {
+                // this.handleSearch('',1,false)
+                this.searchResult = this.searchResult.filter((item,index) => {
+                    return item.sellPrice <= 20000 && item.sellPrice > 10000
+                })
+            } else if (val == 6) {
+                // this.handleSearch('',1,false)
+                this.searchResult = this.searchResult.filter((item,index) => {
+                    return item.sellPrice > 20000
+                })
+            }
+        },
+        radio: function(val) {
+            if (this.keyword == '') {
+                Toast('请输入关键词！')
+                this.radio = ''
+                return
+            }
+            this.isSearched = true
+            if (val == 1) {
+                this.searchResult = localData.filter((item,index) => {
+                    return item.sellPrice/100 >= this.keyword
+                })
+            } else if (val == 2){
+                this.searchResult = localData.filter((item,index) => {
+                    return item.sellPrice/100 < this.keyword
+                })
+            }
+        },
     },
     created() {
         this.initKeyWords()
@@ -167,7 +281,15 @@ export default {
                     }
                     this.loading = false
                 })
+                post('/search/knowledge/curse',this.pageData).then(({desc,data,code}) => {
+                    if(code*1 !== 10000) {
+                        Toast(desc||'网络请求失败！')
+                    }else{
+                        this.courseResult = data.data
+                    }
+                })
             }
+
         },
         onCancel() {
             this.$router.replace('/')
@@ -189,12 +311,45 @@ export default {
         },
         backTop() {
             window.scrollTo(0, 0)
+        },
+        onConfirm(value, index) {
+            this.showPrice = false
+            this.priceArea = value
+            this.isSearched = true
+            if (this.priceArea == '大于') {
+                this.searchResult = localData.filter((item,index) => {
+                    return item.sellPrice/100 >= this.keyword
+                })
+
+            }else if (this.priceArea == '小于') {
+                this.searchResult = localData.filter((item,index) => {
+                    return item.sellPrice/100 < this.keyword
+                })
+
+            }
+            this.showPrice = false
+        },
+        onChange (picker, value, index) {
+
+        },
+        Cancel () {
+            this.priceArea = ''
+            this.showPrice = false
         }
     }
 }
 </script>
 
 <style>
+.van-tab__pane {
+    padding-top: 0;
+}
+.van-tabs--line{
+    overflow: hidden;
+}
+.van-radio__icon {
+    font-size: 14px;
+}
 .van-dropdown-menu {
   background: #f6f8fb;
 }
@@ -209,6 +364,10 @@ export default {
 }
 .van-dropdown-menu__title::after {
   color: #ee0a24;
+}
+.van-search--show-action {
+    width: 75%;
+    float: right;
 }
 </style>
 <style lang="less" scoped>
@@ -234,6 +393,22 @@ export default {
   padding-right:0.12rem;
   padding-bottom: 0.16rem;
   background: white;
+  .age {
+    padding: 0 0.12rem;
+    padding-top: 0.175rem;
+    color: #999;
+    font-size: 0.15rem;
+    display: -webkit-box;
+    display: -ms-flexbox;
+    display: flex;
+    -webkit-box-pack: justify;
+    -ms-flex-pack: justify;
+    justify-content: space-between;
+    -webkit-box-align: center;
+    -ms-flex-align: center;
+    align-items: center;
+    background: white;
+  }
   .key-word {
       padding: 0.055rem 0.1rem;
       border: 1px solid #CCCCCC;

@@ -19,12 +19,7 @@
         </div>
         <van-tabs style="margin-top:0.12rem">
             <van-tab title="介绍">
-                <img
-                    style=""
-                    src="../assets/images/blank_error.png">
-            </van-tab>
-            <van-tab title="评论">
-                <img src="../assets/images/blank_error.png">
+                <div v-html="richContent" />
             </van-tab>
         </van-tabs>
         <van-goods-action>
@@ -47,7 +42,9 @@
 import { Toast } from 'vant';
 import AccountLogic from '@/logic/account'
 import { post } from '@/http-handle/http2.js'
+import richContent from '../logic/richContent'
 export default {
+    mixins:[richContent],
     data() {
         return {
             goodsData: {},
@@ -80,6 +77,7 @@ export default {
                     return
                 } else {
                     this.goodsData = data
+                    this.loadRichContent(this.goodsData.goodsDetailId)
                 }
                 this.loading = false
             })

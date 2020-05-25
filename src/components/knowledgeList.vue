@@ -22,10 +22,6 @@
                             {{ item.subscribers }}人订阅
                         </p>
                         <span
-                            v-if="item.isFree!=1"
-                            class="price"><small>￥</small>{{ (item.originalPrice/100).toFixed(2) }}</span>
-                        <span
-                            v-else
                             class="price">免费</span>
                     </div>
                 </li>

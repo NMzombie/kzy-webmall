@@ -69,112 +69,6 @@ const map = {
     },
 
 
-    //线上环境配置
-    pro: {
-        //每个模块对应的base_url
-        api_url_map: {
-            '/pullnew': [`https://distapi.${main_hostname}`],
-            '/fiss': [`https://distapi.${main_hostname}`],
-            '/short/getTargetUrl': [`https://distapi.${main_hostname}`],
-            '/short/generateWithoutHttp': [`https://distapi.${main_hostname}`],
-            '/resource/location/search': [`https://cardapi.${main_hostname}`],
-            '/nodewebapi/': [`https://nodewebapi.${main_hostname}`],
-
-            '/rebate': [`https://memberapi.${main_hostname}`],
-            '/integral/coupon': [`https://cardapi.${main_hostname}`],
-            '/integral/award': [`https://goodsapi.${main_hostname}`],
-            '/trade/': [`https://tradeapi.${main_hostname}`], //订单模块
-            '/account/': [`https://accountapi.${main_hostname}`], //app账户模块
-            '/goods/': [`https://goodsapi.${main_hostname}`], //商品模块
-            '/integral/': [`https://goodsapi.${main_hostname}`], //奖品模块
-            '/pay/': [`https://payapi.${main_hostname}`], //支付模块
-            '/logistics/': [`https://lgscapi.${main_hostname}`], //物流模块
-            '/data/': [`https://dataapi.${main_hostname}`], //数据统计模块
-            '/cart/': [`https://cartapi.${main_hostname}`], //购物车模块
-            '/content/': [`https://contentapi.${main_hostname}`], //内容模块
-            '/mall/': [`https://cardapi.${main_hostname}`], //优惠券
-            '/protect/': [`https://protectapi.${main_hostname}`], //维权
-            '/pickuporder/':[`https://protectapi.${main_hostname}`],//逆向揽件
-            '/internalAccount/': [`https://accountapi.${main_hostname}`], //内部员工信息录入
-            '/buyershow/': [`https://buyershowapi.${main_hostname}`], //买家秀
-            '/addRateInfoNew/': [`https://buyershowapi.${main_hostname}`], //积分买家秀
-            '/personalCenter/': [`https://contentapi.${main_hostname}`], //App用户中心
-            '/follower/': [`https://contentapi.${main_hostname}`], //App关注用户
-            '/knowledge/': [`https://knowledgeapi.${main_hostname}`], //付费内容
-            '/solidfoods/': [`https://knowledgeapi.${main_hostname}`], //辅食
-            '/card/': [`https://cardapi.${main_hostname}`], //裂变活动
-            '/flashsale/': [`https://cardapi.${main_hostname}`], //限时闪购
-            '/message/': [`https://contentapi.${main_hostname}`], //消息
-            '/earlylearning/': [`https://learningapi.${main_hostname}`], //早教
-            '/evaluation/': [`https://learningapi.${main_hostname}`], //测评
-            '/search/': [`https://searchapi.${main_hostname}`], //搜索模块
-            '/education/': [`https://knowledgeapi.${main_hostname}`], //数学盒子
-            '/shoppingcart/': [`https://cartapi.${main_hostname}`], //凑单购物车模块
-            '/dist/': [`https://distapi.${main_hostname}`], //分销
-            '/algo/': [`https://goodsapi.${main_hostname}`], //算法推荐
-            '/groupbuyv2/': [`https://goodsapi.${main_hostname}`], //算法推荐
-            '/credit/': [`https://score.${main_hostname}`], // 积分
-            '/sign/': [`https://score.${main_hostname}`], // 签到
-            '/member': [`https://memberapi.${main_hostname}`], //会员
-            '/pwdCoupon/': [`https://cardapi.${main_hostname}`],// 口令红包
-            '/live': [`https://liveapi.${main_hostname}`] ,// 直播
-            '/cell': [`https://knowledgeapi.${main_hostname}`], //
-            '/short': [`https://s.${main_hostname}`], // 生成短链
-            '/config': [`https://accountapi.${main_hostname}`], // 配置信息
-            '/groupbuypopup/': [`https://cardapi.${main_hostname}`], // 拼团弹窗
-        },
-        staticimg_hostname:`staticimg.${main_hostname}`,
-        staticimg_origin:`https://staticimg.${main_hostname}`,
-        staticimg_url:`https://staticimg.${main_hostname}/`,
-
-        // 商品详情html文档的base url
-        goods_detail_html_base_url: `https://m.${main_hostname}/virtual-static/html/`,
-        award_detail_html_base_url: `https://m.${main_hostname}/virtual-static/html/award/`,
-        // 帖子详情html文档的base url
-        posts_detail_html_base_url: `https://m.${main_hostname}/virtual-static/html/content/`,
-        // posts_detail_html_base_url: `https://staticimg.${main_hostname}/`,
-        //付费内容文档内容
-        knowledge_detail_html_base_url: `https://m.${main_hostname}/virtual-static/html/knowledge/`,
-        //早教内容文档内容
-        zaojiao_detail_html_base_url: `https://m.${main_hostname}/virtual-static/html/earlylearning/`,
-        //默认的base url，没有匹配上api_url_map则使用default_base_url
-        default_base_url: `https://api.${main_hostname}/api`,
-        //引导下载页面url
-        go_download_page_url: `https://m.${main_hostname}/page/441`,
-        // 笔记预览页面请求地址
-        posts_detail_preview_html_base_url: `https://adminapi.${main_hostname}/content/community/post/admin/detail`,
-        //图片跨域处理路径
-        proxy_img_base_url: `https://sticker.${main_hostname}/proxy/image`,
-        //学院首页最新地址
-        go_app_college_index_url: `https://m.${main_hostname}/app_college_index`,
-
-        mathbox_origin: `https://mathbox.${main_hostname}`,
-
-        early_origin: `https://early.${main_hostname}`,
-
-        shence_origin: `https://shence.${main_hostname}`,
-
-        //数学盒子首页
-        mathbox_index: `https://m.${main_hostname}/mathbox/index`,
-        // 分销中心首页
-        distribution_index: `https://distribution.${main_hostname}/distribution/index`,
-        // 分销中心去答题
-        distribution_learn: `https://distribution.${main_hostname}/distribution/learn/index`,
-        // 分销中心成功页面
-        distribution_success: `https://distribution.${main_hostname}/distribution/learn/success`,
-        // 分销中转地址
-        distribution_router: `https://distribution.${main_hostname}/distribution/router/index`,
-        // 分销入口
-        distribution_entrance: `https://m.${main_hostname}/distribution`,
-        //数学游戏
-        mathgame_origin: `https://webgame.${main_hostname}`,
-        // 早教改版游戏
-        earlygame_origin: `https://staticearly.${main_hostname}`,
-        // 新细胞
-        cell_origin: `https://cell.${cell_main_hostname}`,
-        solidfoods:`https://knowledgeapi.${main_hostname}`//辅食
-
-    },
     //预发环境（beta）
     beta: {
         //每个模块对应的base_url
@@ -506,19 +400,6 @@ console.log(process.env.VUE_APP_API_ENV,'VUE_APP_API_ENV')
 
 const config = Object.assign({}, map.base, map[VUE_APP_API_ENV])
 
-let wxconfig = {}
-
-wxconfig = {
-    // (辅食小店的)微信授权的appid
-    appId:"wx8aae36b94fe14a70",
-    appId_zj:"wxf292488bb1d28004",
-    appId_gj:"wxf292488bb1d28004",//糕妈优选
-    appId_xy:"wx8aae36b94fe14a70",//年糕妈妈学院
-    appId_cell: 'wx8aae36b94fe14a70',
-    loginCallbackUrl:"http://callback.ngmm001.com/account/wechatAuth/callback",
-    authorizeCallbackUrl:"http://callback.ngmm001.com/account/wechatAuth/callback",
-    logoutUrl: "http://callback.ngmm001.com/account/wechatAuth/logout",
-}
 
 // 当API_ENV为 local时，URL可以根据第二个参数设置。
 function getApiUrl(url, debugEnv) {
@@ -575,7 +456,6 @@ window.proConstant = proConstant
 window.config = config;
 
 export {
-    wxconfig,
     proConstant,
     getApiUrl,
 }
