@@ -270,7 +270,8 @@ export default {
                     addressId: "",
                     goodsIds,
                     goodsSku,
-                    num
+                    num,
+                    fromCart: false
                 }
             })
         }

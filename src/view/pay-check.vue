@@ -120,6 +120,9 @@ export default {
     computed: {
         userId () {
             return AccountLogic.getUserId()
+        },
+        q_fromCart () {
+            return this.$route.query.fromCart || 'true'
         }
     },
     created() {
@@ -160,7 +163,9 @@ export default {
                     this.goodsList = data
                     this.goodsList.forEach((item, index) => {
                         item.xNum = num[index]
+                        item.xSkuId = item.skus[0].id
                     })
+                    console.log(this.build_order_items())
                     this.loading = false
                 }
             })
@@ -175,11 +180,41 @@ export default {
             })
         },
         onSubmit () {
-            this.$dialog.alert({
-                title: '提示',
-                message: '请前往APP下单~',
-            }).then(() => {
-            });
+            let fromPage = this.q_fromCart == 'true' ? '2' : '1'
+            let postData = {
+                vipVersion:false,
+                deductionAmount: 0,
+                firstDeductionDiscountId: null,
+                receiveId:4049,
+                userId: this.userId,
+                couponId: '',
+                fromCart: this.q_fromCart,
+                identificationName: '',
+                identificationCode: '',
+                buyerRemark: '',
+                items:this.build_order_items(),
+                fromPage,
+                isInvoice: false,
+                fqNum: null,
+                distUserId: null,
+                channel: 1,
+                buyMemberCard: false
+            }
+            post('/trade/buyActual',postData).then(({code,data,desc}) => {
+                if(code*1 != 10000) {
+                    Toast(desc||'网络连接失败')
+                } else {
+                    this.$dialog.alert({
+                        title: '提示',
+                        message: '订单生成成功~请前往APP下单~',
+                    }).then(() => {
+                        setTimeout(() => {
+                            this.$router.push('/')
+                        },1000)
+                    });
+                }
+            })
+
         },
         sumPrice () {
             let price = 0
@@ -201,6 +236,23 @@ export default {
                     this.address = data
                 }
             })
+        },
+        build_order_items () {
+            let items = []
+            this.goodsList.forEach((item, index) => {
+                if (item.xNum) {
+                    let obj = {
+                        itemId: parseInt(item.id || 0, 10),
+                        num: parseInt(item.xNum || 0, 10),
+                        skuCode: item.xSkuId ? parseInt(item.xSkuId || 0, 10) : null,
+                        activityId: null,
+                        cartItemType:  0, // 是否为奖品
+                        channelCode: null
+                    }
+                    items.push(obj)
+                }
+            })
+            return items
         }
     }
 }

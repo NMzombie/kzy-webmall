@@ -1,5 +1,10 @@
 <template>
     <div>
+        <div
+            v-if="loading"
+            class="loading_new_wrap">
+            <div :class="['liu']" />
+        </div>
         <van-tabs
             v-model="active"
             sticky>
@@ -9,7 +14,31 @@
                 :title="item.title"
                 :name="item.name" />
         </van-tabs>
-        <div class="noData">
+        <div v-if="list.length > 0">
+            <van-card
+                v-for="(item,index) in list"
+                :key="index"
+                :tag="item.trade.tradeState != 1 ? '订单已关闭' : ''"
+                :price="item.trade.payment/100"
+                :desc="item.trade.orders[0].itemTitle"
+                :title="item.trade.orders[0].itemSkuName"
+                :thumb="item.trade.orders[0].itemIcon">
+                <template #footer>
+                    <van-button
+                        v-if="item.trade.tradeState == 1"
+                        size="small"
+                        @click="cancel(item.trade.tradeId)">
+                        取消订单
+                    </van-button>
+                    <van-button size="small">
+                        前往APP
+                    </van-button>
+                </template>
+            </van-card>
+        </div>
+        <div
+            v-else
+            class="noData">
             <img src="../assets/images/trade-list-nodata.png">
             <p>啊哦，您还没有相关的订单～</p>
         </div>
@@ -58,14 +87,59 @@ export default {
                     title:"交易成功",
                     name: '4'
                 }
-            ]
+            ],
+            list: [],
+            loading: true
+        }
+    },
+    computed: {
+        userId() {
+            return AccountLogic.getUserId()
         }
     },
     created() {
         this.active = this.$route.params.id
+        this.initData()
     },
     methods: {
+        initData() {
+            this.loading = true
+            let postData = {
+                pageNo:1,
+                pageSize: 10,
+                tradeStatus: null,
+                userId: this.userId,
+                queryRatable: ''
+            }
+            post('/trade/queryMyTradeList',postData).then(({data,code,desc}) => {
+                if(code*1 != 10000) {
+                    Toast(desc || '网络连接失败')
+                }else {
+                    this.list = data
+                }
+                this.loading = false
+            })
+        },
+        cancel(id) {
+            this.$dialog.alert({
+                title: '提示',
+                message: '是否取消订单？',
+            }).then(() => {
+                let postData = {
+                    tradeId: id,
+                    userId: this.userId
+                }
+                post('/trade/cancelTrade',postData).then(({data,desc,code}) => {
+                    if(code*1 != 10000) {
+                        Toast(desc || '网络连接失败！')
+                    } else {
+                        Toast('订单取消成功！')
+                        this.initData()
+                    }
+                })
+            });
 
+        }
     }
 }
 </script>
