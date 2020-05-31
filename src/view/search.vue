@@ -151,7 +151,7 @@ export default {
         return {
             keyword: '',
             keyWordList: [],
-            calssWords: ['0-3个月','3-6个月','6-12个月','一年以上'],
+            calssWords: ['2岁','3岁','0-6个月','6-12个月','12-18个月','19个月','20个月','21个月','22个月','23个月'],
             searchResult: [],
             totalNumber: 0,
             sortOption: [

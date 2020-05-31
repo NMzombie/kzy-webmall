@@ -88,7 +88,7 @@ export default {
 <style>
 .van-tab__pane {
     text-align: center;
-    padding-top: 0.4rem;
+    margin-bottom: 0.6rem;
 }
 </style>
 <style lang="less" scoped>

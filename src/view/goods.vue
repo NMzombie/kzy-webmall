@@ -21,7 +21,7 @@
                 <div
                     class="box-price-left">
                     <div v-if="p.existSku">
-                        <span class="price-sell">￥</span><span class="price-s">{{ minPrice }}<span class="line"> - </span>{{ maxPrice }}</span>
+                        <span class="price-sell">￥</span><span class="price-s">{{ minPrice }}</span>
                     </div>
                     <div v-else>
                         <span class="price-sell">￥</span><span class="price-s">{{ goodsPrice }}</span>
